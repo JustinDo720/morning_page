@@ -63,10 +63,10 @@
         -"Jim Koch, founder of Boston Beer Co."
       </h6>
     </div>
-    <div id="news">
+    <div class="news">
 
     </div>
-    <div id="weather">
+    <div class="weather">
       <h1>
         {{ r2l_title }}
       </h1>
@@ -110,5 +110,10 @@ export default{
   text-align:center
 }
 
+.todo{
+  grid-column-start: 2;
+  grid-row-start: 2;
+  grid-row-end: 5;
+}
 
 </style>
