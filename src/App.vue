@@ -1,22 +1,17 @@
 <template>
   <div id="app">
-    <home_page></home_page>
+    <router-link to="/">Home Page</router-link>&nbsp;
+    <router-link to="/todo">Todo-Testing Page</router-link>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
 //* Imports go here
-import axios from 'axios'
-import home_page from '@/components/Home'
+
 
 export default{
-  components:{
-    home_page
-  },
   created(){
-    axios.get('https://jsonplaceholder.typicode.com/comments').then(obj=>{
-      console.log(obj.data)
-    })
   }
 
 }

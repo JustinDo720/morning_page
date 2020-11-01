@@ -4,6 +4,7 @@
       <h1>
         {{ r1l_title }}
       </h1>
+      <hr>
       <div class="quote-sub">
         <h4>
           “You have a viable business only if your product is either better or cheaper than the alternatives.
@@ -19,6 +20,7 @@
       <h1>
         {{ r1m_title }}
       </h1>
+      <hr>
       <div class="todo-sub">
         <h4>
           “You have a viable business only if your product is either better or cheaper than the alternatives.
@@ -65,6 +67,7 @@
       <h1>
         {{ r1r_title }}
       </h1>
+      <hr>
       <div class="news-1">
         <h1>
           HelloHelloHelloHelloHelloHelloHelloHelloHelloHello
@@ -86,6 +89,7 @@
       <h1>
         {{ r2l_title }}
       </h1>
+      <hr>
       <div class="weather-sub">
         <h6>
           -"Jim Koch, founder of Boston Beer Co."
