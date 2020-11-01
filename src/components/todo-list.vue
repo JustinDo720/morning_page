@@ -7,10 +7,10 @@
     </div>
     <div class="todo-list display-todo">
       <h2 id="display-todo-title">Your Objectives</h2>
-      <h4 v-for="(todo, key) in todo_list" :key="key">
+      <h4 v-for="(todo, todo_id) in todo_list" :key="todo_id">
         {{todo.todo_item}}
-        <button @click="todo.completed = true">&checkmark;</button>&nbsp;
-        <button @click="todo.completed = false">&cross;</button>
+        <button @click="updateStatus(todo_id,'completed')">&checkmark;</button>&nbsp;
+        <button @click="updateStatus(todo_id,'deleted')">&cross;</button>
       </h4>
     </div>
     <div class="todo-list enter-todo">
@@ -33,6 +33,7 @@ export default{
       title: 'To-Do-List',
       todo: '',
       todo_list: [],
+      todo_completed: [],
       task_completed: false,
     }
   },
@@ -41,23 +42,28 @@ export default{
       // We are going to create an object and set some keys to values in which will be pushed to the list
       //* Consider using unshift (from the youtube video)
       let todo_info = {}
-      todo_info['todo_item'] = this.todo
-      todo_info['completed'] = this.task_completed
-      this.todo_list.push(todo_info)
+      //* Makes sure that the user input wasn't on accident
+      if(this.todo !== ''){
+        todo_info['todo_item'] = this.todo
+        todo_info['completed'] = this.task_completed
+        this.todo_list.push(todo_info)
+      }
       // Resets the input filed to become blank
       this.todo = ''
+    },
+    updateStatus: function(task_id, task_status){
+      if(task_status === 'completed'){
+        //* So the idea is that we set the status to true then push this item to the completed task array
+        this.todo_list[task_id].completed = true
+        this.todo_completed.push(this.todo_list[task_id])
+        // Splice is used to delete some things in an array using the index,amount as parameter
+        this.todo_list.splice(task_id,1)
+      }else{
+        this.todo_list[task_id].completed = false
+        this.todo_list.splice(task_id,1)
+      }
     }
   },
-  computed:{
-    todo_completed: function(){
-      //* Returning a filtered list with completed being true. This is used to display completed tasks
-      return this.todo_list.filter((todo)=>{
-        if (todo.completed === true){
-          return todo
-        }
-      })
-    }
-  }
 }
 </script>
 <style scoped>
@@ -82,7 +88,8 @@ export default{
 }
 .display-todo{
   grid-column-start: 1;
-  grid-row-start: 2
+  grid-row-start: 2;
+
 }
 .enter-todo{
   grid-column-start: 2;
@@ -90,7 +97,7 @@ export default{
   margin: 0 auto;
   border: 1px solid black;
   height: 100px;
-  width: 760px;
+  width: 500px;
   max-height: 100px;
   text-align:center
 }
