@@ -6,22 +6,30 @@
       </h1>
     </div>
     <div class="todo-list display-todo">
-      <h2 id="display-todo-title">Your Objectives</h2>
-      <h4 v-for="(todo, todo_id) in todo_list" :key="todo_id">
-        {{todo.todo_item}}
-        <button @click="updateStatus(todo_id,'completed')">&checkmark;</button>&nbsp;
-        <button @click="updateStatus(todo_id,'deleted')">&cross;</button>
-      </h4>
+      <h2 id="display-todo-empty" v-if="todo_list.length === 0">
+        You Currently do not have any tasks
+      </h2>
+      <div id="individual-task" v-for="(todo, todo_id) in todo_list" :key="todo_id">
+        <ul>
+          <li>
+            <h2>
+              {{ todo.todo_item }}
+              <button @click="updateStatus(todo_id,'completed')">&checkmark;</button>&nbsp;
+              <button @click="updateStatus(todo_id,'deleted')">&cross;</button>
+            </h2>
+            <span>
+              {{todo.task_date}}
+            </span>
+          </li>
+        </ul>
+      </div>
     </div>
     <div class="todo-list enter-todo">
       <h2 id="enter-todo-title">Add a To-Do item to your list!</h2>
-      <input placeholder="Add Item" v-model="todo" @keyup.enter="add_todo"> &nbsp;
-      <button type="submit" @click="add_todo">Add to your To-Do List</button>
-
-      <h1 v-for="(todo,key) in todo_completed" :key="key">
-        {{todo.todo_item}}
-      </h1>
+      <input class='todo_input' placeholder="Add an item to your list" v-model="todo" @keyup.enter="add_todo">
     </div>
+
+
   </div>
 </template>
 <script>
@@ -35,18 +43,30 @@ export default{
       todo_list: [],
       todo_completed: [],
       task_completed: false,
+      months : [ "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December" ],
+      days_of_the_week : ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
     }
   },
   methods:{
     add_todo: function(){
-      // We are going to create an object and set some keys to values in which will be pushed to the list
-      //* Consider using unshift (from the youtube video)
-      let todo_info = {}
       //* Makes sure that the user input wasn't on accident
       if(this.todo !== ''){
-        todo_info['todo_item'] = this.todo
-        todo_info['completed'] = this.task_completed
-        this.todo_list.push(todo_info)
+        let task_date = new Date()
+        let show_date = `
+        ${this.days_of_the_week[task_date.getDay()]},
+        ${task_date.getDate()}
+        ${this.months[task_date.getMonth()]}
+        ${task_date.getFullYear()}.
+        ` // e.g Monday, 2 November 2020
+
+        let todo_info = {
+          'todo_item':this.todo,
+          'completed': this.task_completed,
+          'task_date': show_date,
+
+        }
+        this.todo_list.unshift(todo_info) // Unshift basically pushes the obj in front instead of behind
       }
       // Resets the input filed to become blank
       this.todo = ''
@@ -64,13 +84,15 @@ export default{
       }
     }
   },
+  created(){
+  }
 }
 </script>
 <style scoped>
 /* Griding system*/
 #todo-container{
   display:grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, 1fr);
   grid-gap: 1em;
   grid-auto-rows: minmax(100px, auto);
   margin: 10px;
@@ -89,28 +111,60 @@ export default{
 .display-todo{
   grid-column-start: 1;
   grid-row-start: 2;
-
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  grid-gap: 1em;
+}
+.display-todo > div{
+  background: tomato;
+  border: 1px solid black;
 }
 .enter-todo{
   grid-column-start: 2;
   grid-row-start: 2;
   margin: 0 auto;
   border: 1px solid black;
-  height: 100px;
+  height: 120px;
   width: 500px;
-  max-height: 100px;
+  max-height: 120px;
   text-align:center
 }
 
 /* Individual items */
-#display-todo-title{
+#display-todo-empty{
   text-align:center;
-  text-decoration: underline
+  margin: 40px 0;
 }
 #enter-todo-title{
   text-align:center;
   text-decoration: underline
 }
+.todo_input:focus{
+  box-shadow: 0 1px 5px 0, rgba(0,0,0,0.15);
+  transform: translateY(-3px);
+}
+.todo_input{
+  width: 400px;
+  border: 1px solid;
+  border-radius: 3px;
+  font-size: 15px;
+  padding: 0 20px;
+  line-height: 30px;
+  -moz-transition: all 0.4s ease; /* Transition for Mozilla! */
+  -webkit-transition: all 0.4s ease; /* For other browsers */
+}
 
+
+/* Html Elements */
+li{
+  list-style: circle;
+}
+input{
+  outline: none;
+  margin: 0;
+  width: 100%;
+  font-family: inherit;
+}
 
 </style>
