@@ -9,26 +9,35 @@
       <h2 id="display-todo-empty" v-if="todo_list.length === 0">
         You Currently do not have any tasks
       </h2>
-      <div id="individual-task" v-for="(todo, todo_id) in todo_list" :key="todo_id">
-        <ul>
-          <li>
-            <h2>
-              {{ todo.todo_item }}
-              <button @click="updateStatus(todo_id,'completed')">&checkmark;</button>&nbsp;
-              <button @click="updateStatus(todo_id,'deleted')">&cross;</button>
-            </h2>
-            <span>
-              {{todo.task_date}}
-            </span>
-          </li>
-        </ul>
+      <!-- Setting task_done and using the var right on v-for actually works -->
+      <div id="individual-task"
+           v-for="(todo, todo_id) in todo_list"
+           class="task_done"
+           :key="todo_id">
+        <div>
+          <ul>
+            <li>
+              <h2>
+                {{ todo.todo_item }}
+                <button class='deleted' @click="updateStatus(todo_id,'deleted')">&cross;</button>
+                <button class='completed' @click="updateStatus(todo_id,'completed')">&checkmark;</button>&nbsp;
+                <!--
+                <button class='deleted' @click="updateStatus(todo_id,'deleted')">&cross;</button>
+                <button class='completed' @click="updateStatus(todo_id,'completed')">&checkmark;</button>&nbsp;
+                -->
+              </h2>
+              <span>
+                {{todo.task_date}}
+              </span>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
     <div class="todo-list enter-todo">
       <h2 id="enter-todo-title">Add a To-Do item to your list!</h2>
       <input class='todo_input' placeholder="Add an item to your list" v-model="todo" @keyup.enter="add_todo">
     </div>
-
 
   </div>
 </template>
@@ -59,11 +68,12 @@ export default{
         ${this.months[task_date.getMonth()]}
         ${task_date.getFullYear()}.
         ` // e.g Monday, 2 November 2020
+        let show_time =`${task_date.getHours()}:${task_date.getMinutes()}`
 
         let todo_info = {
           'todo_item':this.todo,
           'completed': this.task_completed,
-          'task_date': show_date,
+          'task_date': `${show_date} ${show_time}`,
 
         }
         this.todo_list.unshift(todo_info) // Unshift basically pushes the obj in front instead of behind
@@ -77,14 +87,16 @@ export default{
         this.todo_list[task_id].completed = true
         this.todo_completed.push(this.todo_list[task_id])
         // Splice is used to delete some things in an array using the index,amount as parameter
-        this.todo_list.splice(task_id,1)
+        console.log(this.todo_list[task_id].completed)
+        //this.todo_list.splice(task_id,1)
       }else{
         this.todo_list[task_id].completed = false
-        this.todo_list.splice(task_id,1)
+        //this.todo_list.splice(task_id,1)
+        console.log(this.todo_list[task_id].completed)
       }
     }
   },
-  created(){
+  computed:{
   }
 }
 </script>
@@ -97,9 +109,7 @@ export default{
   grid-auto-rows: minmax(100px, auto);
   margin: 10px;
 }
-#todo-container > div{
-  background: cornflowerblue;
-}
+
 #todo-container > div:nth-child(odd){
   background: gold;
 }
@@ -117,7 +127,7 @@ export default{
   grid-gap: 1em;
 }
 .display-todo > div{
-  background: tomato;
+  background: whitesmoke;
   border: 1px solid black;
 }
 .enter-todo{
@@ -155,6 +165,23 @@ export default{
   -webkit-transition: all 0.4s ease; /* For other browsers */
 }
 
+.completed{
+  background: transparent;
+  color: green;
+  float: right;
+}
+
+.deleted{
+  background: transparent;
+  color: red;
+  float: right;
+}
+
+.task_done div{
+  background: green;
+  /* MAKE SURE TO INCLUDE THE PADDING because it covers the WHOLE entire box */
+  padding: 1px;
+}
 
 /* Html Elements */
 li{
@@ -166,5 +193,8 @@ input{
   width: 100%;
   font-family: inherit;
 }
-
+button{
+  background: transparent;
+  border: none
+}
 </style>
