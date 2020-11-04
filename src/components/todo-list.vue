@@ -5,29 +5,58 @@
         {{title}}
       </h1>
     </div>
-    <div class="todo-list display-todo">
-      <h2 id="display-todo-empty" v-if="todo_list.length === 0">
+    <div class="todo-list display-todo" v-if="!view_completed_mode">
+      <h2 class="display-todo-empty" v-if="todo_list.length === 0">
         You Currently do not have any tasks
       </h2>
       <!-- Setting task_done and using the var right on v-for actually works -->
       <div id="individual-task"
-           v-for="(todo, todo_id) in todo_list"
-           class="task_done"
+           v-for="(task, todo_id) in todo_list"
+           :class="{'task_done':task.completed, 'task_neutral': task.neutral,'task_removed': task.removed}"
            :key="todo_id">
         <div>
           <ul>
             <li>
               <h2>
-                {{ todo.todo_item }}
-                <button class='deleted' @click="updateStatus(todo_id,'deleted')">&cross;</button>
-                <button class='completed' @click="updateStatus(todo_id,'completed')">&checkmark;</button>&nbsp;
-                <!--
-                <button class='deleted' @click="updateStatus(todo_id,'deleted')">&cross;</button>
-                <button class='completed' @click="updateStatus(todo_id,'completed')">&checkmark;</button>&nbsp;
-                -->
+                {{ task.todo_item }}
+                <button class='deleted'
+                        @click="updateStatus(todo_id,'deleted','normal_mode')">
+                  &cross;
+                </button>
+                <button class='completed'
+                        @click="updateStatus(todo_id,'completed', 'normal_mode')">
+                  &checkmark;
+                </button>&nbsp;
               </h2>
               <span>
-                {{todo.task_date}}
+                {{task.task_date}}
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div id="view-completed-todo" class="todo-list display-todo" v-else>
+      <h2 class="display-todo-empty" v-if="todo_completed.length === 0">
+        You currently have no completed tasks
+      </h2>
+      <div id="individual-completed-task" class="task_done" v-for="(task, task_id) in todo_completed" :key="task_id">
+        <div>
+          <ul>
+            <li>
+              <h2>
+                {{ task.todo_item }}
+                <button class='deleted'
+                        @click="updateStatus(task_id,'deleted', 'completed_mode')">
+                  &cross;
+                </button>
+                <button class="neutral"
+                        @click="updateStatus(task_id,'undo', 'completed_mode')">
+                  &#8635;
+                </button>
+              </h2>
+              <span>
+                {{task.task_date}}
               </span>
             </li>
           </ul>
@@ -36,7 +65,9 @@
     </div>
     <div class="todo-list enter-todo">
       <h2 id="enter-todo-title">Add a To-Do item to your list!</h2>
-      <input class='todo_input' placeholder="Add an item to your list" v-model="todo" @keyup.enter="add_todo">
+      <input class='todo_input' placeholder="Add an item to your list" v-model="todo" @keyup.enter="add_todo"><br>
+      <button v-if="!view_completed_mode" @click="view_completed_mode = !view_completed_mode">View completed</button>
+      <button v-else @click="view_completed_mode = !view_completed_mode">View To-Do List</button>
     </div>
 
   </div>
@@ -52,6 +83,9 @@ export default{
       todo_list: [],
       todo_completed: [],
       task_completed: false,
+      task_removed: false,
+      task_neutral: true,
+      view_completed_mode: false,
       months : [ "January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December" ],
       days_of_the_week : ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
@@ -73,6 +107,8 @@ export default{
         let todo_info = {
           'todo_item':this.todo,
           'completed': this.task_completed,
+          'removed': this.task_removed,
+          'neutral': this.task_neutral,
           'task_date': `${show_date} ${show_time}`,
 
         }
@@ -81,18 +117,37 @@ export default{
       // Resets the input filed to become blank
       this.todo = ''
     },
-    updateStatus: function(task_id, task_status){
+    updateStatus: function(task_id, task_status, mode){
       if(task_status === 'completed'){
         //* So the idea is that we set the status to true then push this item to the completed task array
         this.todo_list[task_id].completed = true
-        this.todo_completed.push(this.todo_list[task_id])
+        this.todo_list[task_id].neutral = false
+        this.todo_list[task_id].removed = false
+        this.todo_completed.unshift(this.todo_list[task_id])
         // Splice is used to delete some things in an array using the index,amount as parameter
-        console.log(this.todo_list[task_id].completed)
-        //this.todo_list.splice(task_id,1)
-      }else{
-        this.todo_list[task_id].completed = false
-        //this.todo_list.splice(task_id,1)
-        console.log(this.todo_list[task_id].completed)
+        this.todo_list.splice(task_id,1)
+      }else if(task_status === 'undo'){
+        //* The undo button is only for the completed view so we use todo_completed list instead
+        this.todo_completed[task_id].netrual = true
+        this.todo_completed[task_id].completed = false
+        this.todo_completed[task_id].removed = false
+        //! Note: If you unshift something keep them unshift or else the index will be messed up
+        this.todo_list.unshift(this.todo_completed[task_id]) // So if this is undo we are going to push back the item
+        this.todo_completed.splice(task_id, 1)
+      }else{ // At this point the user just wants to remove the task
+        // The idea behind this is that we use mode to see which array we need to edit
+        if(mode === 'normal_mode'){
+          this.todo_list[task_id].removed = true
+          this.todo_list[task_id].neutral = false
+          this.todo_list[task_id].completed = false
+          this.todo_list.splice(task_id,1)
+        }else{
+          this.todo_completed[task_id].removed = true
+          this.todo_completed[task_id].neutral = false
+          this.todo_completed[task_id].completed = false
+          this.todo_completed.splice(task_id,1)
+        }
+
       }
     }
   },
@@ -138,13 +193,17 @@ export default{
   height: 120px;
   width: 500px;
   max-height: 120px;
-  text-align:center
+  text-align:center;
+  padding: 10px;
 }
 
 /* Individual items */
-#display-todo-empty{
+.display-todo-empty{
   text-align:center;
-  margin: 40px 0;
+  margin: 5px 20px;
+  padding: 40px;
+  background: whitesmoke;
+  border: 1px solid black;
 }
 #enter-todo-title{
   text-align:center;
@@ -173,14 +232,29 @@ export default{
 
 .deleted{
   background: transparent;
-  color: red;
+  color: darkred;
+  float: right;
+}
+
+.neutral{
+  background: transparent;
+  color: orange;
   float: right;
 }
 
 .task_done div{
-  background: green;
+  background: lightgreen;
   /* MAKE SURE TO INCLUDE THE PADDING because it covers the WHOLE entire box */
-  padding: 1px;
+  padding: 9px;
+}
+.task_removed div{
+  background: lightcoral;
+  /* MAKE SURE TO INCLUDE THE PADDING because it covers the WHOLE entire box */
+  padding: 9px;
+}
+.task_neutral div{
+  background: lightgray;
+  padding: 9px;
 }
 
 /* Html Elements */
@@ -195,6 +269,7 @@ input{
 }
 button{
   background: transparent;
-  border: none
+  border: none;
+  font-size: 18px
 }
 </style>
