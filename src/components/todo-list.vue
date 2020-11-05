@@ -245,16 +245,16 @@ export default{
 .task_done div{
   background: lightgreen;
   /* MAKE SURE TO INCLUDE THE PADDING because it covers the WHOLE entire box */
-  padding: 9px;
+  padding: 19px;
 }
 .task_removed div{
   background: lightcoral;
   /* MAKE SURE TO INCLUDE THE PADDING because it covers the WHOLE entire box */
-  padding: 9px;
+  padding: 19px;
 }
 .task_neutral div{
   background: lightgray;
-  padding: 9px;
+  padding: 19px;
 }
 
 /* Html Elements */
