@@ -52,7 +52,7 @@ export default{
     home_todo,
     home_quote_of_day,
     home_news,
-    home_weather
+    home_weather,
   },
   data(){
     return{
