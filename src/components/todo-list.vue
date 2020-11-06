@@ -73,6 +73,7 @@
   </div>
 </template>
 <script>
+import axios from 'axios'
 
 export default{
   name: 'todo',
@@ -113,11 +114,15 @@ export default{
 
         }
         this.todo_list.unshift(todo_info) // Unshift basically pushes the obj in front instead of behind
+        axios.post('https://morningpage-aa0e4.firebaseio.com/post.json', todo_info).then(obj =>{
+          console.log('Success',obj)
+        })
       }
       // Resets the input filed to become blank
       this.todo = ''
     },
     updateStatus: function(task_id, task_status, mode){
+      let task_at_hand = this.todo_list[task_id]
       if(task_status === 'completed'){
         //* So the idea is that we set the status to true then push this item to the completed task array
         this.todo_list[task_id].completed = true
@@ -137,10 +142,13 @@ export default{
       }else{ // At this point the user just wants to remove the task
         // The idea behind this is that we use mode to see which array we need to edit
         if(mode === 'normal_mode'){
-          this.todo_list[task_id].removed = true
-          this.todo_list[task_id].neutral = false
-          this.todo_list[task_id].completed = false
+          task_at_hand.removed = true
+          task_at_hand.neutral = false
+          task_at_hand.completed = false
           this.todo_list.splice(task_id,1)
+          let delete_url = `https://morningpage-aa0e4.firebaseio.com/post/${task_at_hand.todo_id}.json`
+          axios.delete(delete_url)
+
         }else{
           this.todo_completed[task_id].removed = true
           this.todo_completed[task_id].neutral = false
@@ -151,7 +159,16 @@ export default{
       }
     }
   },
-  computed:{
+  created(){
+    axios.get('https://morningpage-aa0e4.firebaseio.com/post.json').then(obj=>{
+      let todo_info = []
+      for(let key in obj.data){
+        obj.data[key].todo_id = key // Basically each time we are setting a key called todo_id to a value of the firebase id
+        todo_info.unshift(obj.data[key])
+      }
+      this.todo_list = todo_info
+      console.log(todo_info)
+    })
   }
 }
 </script>
