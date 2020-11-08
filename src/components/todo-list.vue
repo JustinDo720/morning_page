@@ -155,7 +155,6 @@ export default{
           task_at_hand.removed = true
           this.todo_list.splice(task_id,1)
           axios.delete(USER_FIREBASE_URL)
-          console.log('We are in normal mode')
 
         }else{ // We are in completed_mode
           const USER_FIREBASE_URL = `https://morningpage-aa0e4.firebaseio.com/post/${task_completed.todo_id}.json`
@@ -164,7 +163,6 @@ export default{
           task_completed.removed = true
           this.todo_completed.splice(task_id,1)
           axios.delete(USER_FIREBASE_URL)
-          console.log('We are in completed mode',`COMPLETED TASK ID: ${task_completed.todo_id}`)
         }
       }
     },
