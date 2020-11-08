@@ -188,7 +188,8 @@ export default{
     axios.get(this.firebase_db_url).then(obj=>{
       let todo_info = []
       for(let firebase_id in obj.data){
-        obj.data[firebase_id].todo_id = firebase_id // Basically each time we are setting a key called todo_id to a value of the firebase id
+        // Basically each time we are setting a key called todo_id to a value of the firebase id
+        obj.data[firebase_id].todo_id = firebase_id
         todo_info.unshift(obj.data[firebase_id])
       }
       this.todo_list = todo_info
