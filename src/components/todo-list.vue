@@ -168,18 +168,20 @@ export default{
         }
       }
     },
-    completedView(){
+    completedView() {
       // Refresh the page with new data which will add back on the new id
       let todo_completed_list = []
-      axios.get(this.firebase_db_url)
-      .then(obj => {
-        for(let fb_id in obj.data){
-          obj.data[fb_id].todo_completed_id = fb_id
-          todo_completed_list.unshift(obj.data[fb_id])
+      axios.get(this.firebase_db_url).then(obj => {
+        for (let firebase_id in obj.data) {
+          // We only want completed items
+          if (obj.data[firebase_id].completed) {
+            obj.data[firebase_id].todo_id = firebase_id
+            todo_completed_list.unshift(obj.data[firebase_id])
+          }
         }
       })
+      this.view_completed_mode = !this.view_completed_mode
       this.todo_completed = todo_completed_list
-      this.view_completed_mode = true
     }
   },
   created(){
