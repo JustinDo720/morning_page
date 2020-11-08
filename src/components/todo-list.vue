@@ -130,11 +130,15 @@ export default{
 
       if(task_status === 'completed'){
         //* So the idea is that we set the status to true then push this item to the completed task array
-        //const USER_FIREBASE_URL = `https://morningpage-aa0e4.firebaseio.com/post/${task_at_hand.todo_id}.json`
+        const USER_FIREBASE_URL = `https://morningpage-aa0e4.firebaseio.com/post/${task_at_hand.todo_id}.json`
         task_at_hand.completed = true
         task_at_hand.neutral = false
         task_at_hand.removed = false
         this.todo_completed.unshift(task_at_hand)
+        // Updates the completed, neutral, removed values in the modified todo item
+        axios.put(USER_FIREBASE_URL, task_at_hand).then(data=>{
+          console.log(data.data)
+        })
         // Splice is used to delete some things in an array using the index,amount as parameter
         this.todo_list.splice(task_id,1)
       }else if(task_status === 'undo'){
@@ -179,21 +183,28 @@ export default{
             todo_completed_list.unshift(obj.data[firebase_id])
           }
         }
+        this.view_completed_mode = !this.view_completed_mode
+        this.todo_completed = todo_completed_list
       })
-      this.view_completed_mode = !this.view_completed_mode
-      this.todo_completed = todo_completed_list
     }
   },
   created(){
     axios.get(this.firebase_db_url).then(obj=>{
       let todo_info = []
       for(let firebase_id in obj.data){
+
+        if(obj.data[firebase_id].neutral){
+          // Basically each time we are setting a key called todo_id to a value of the firebase id
+          obj.data[firebase_id].todo_id = firebase_id
+          todo_info.unshift(obj.data[firebase_id])
+        }
+
         // Basically each time we are setting a key called todo_id to a value of the firebase id
         obj.data[firebase_id].todo_id = firebase_id
         todo_info.unshift(obj.data[firebase_id])
+
       }
       this.todo_list = todo_info
-      console.log(todo_info)
     })
   },
 }
