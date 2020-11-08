@@ -89,7 +89,8 @@ export default{
       view_completed_mode: false,
       months : [ "January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December" ],
-      days_of_the_week : ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
+      days_of_the_week : ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+      firebase_db_url: 'https://morningpage-aa0e4.firebaseio.com/post.json'
     }
   },
   methods:{
@@ -114,7 +115,7 @@ export default{
 
         }
         this.todo_list.unshift(todo_info) // Unshift basically pushes the obj in front instead of behind
-        axios.post('https://morningpage-aa0e4.firebaseio.com/post.json', todo_info).then(obj =>{
+        axios.post(this.firebase_db_url, todo_info).then(obj =>{
           console.log('Success',obj)
         })
       }
@@ -123,53 +124,62 @@ export default{
     },
     updateStatus: function(task_id, task_status, mode){
       let task_at_hand = this.todo_list[task_id]
+      let task_completed = this.todo_completed[task_id]
+      // This is the normal url for the firebase
+      //const USER_FIREBASE_URL = `https://morningpage-aa0e4.firebaseio.com/post/${task_at_hand.todo_id}.json`
+
       if(task_status === 'completed'){
         //* So the idea is that we set the status to true then push this item to the completed task array
-        this.todo_list[task_id].completed = true
-        this.todo_list[task_id].neutral = false
-        this.todo_list[task_id].removed = false
-        this.todo_completed.unshift(this.todo_list[task_id])
+        //const USER_FIREBASE_URL = `https://morningpage-aa0e4.firebaseio.com/post/${task_at_hand.todo_id}.json`
+        task_at_hand.completed = true
+        task_at_hand.neutral = false
+        task_at_hand.removed = false
+        this.todo_completed.unshift(task_at_hand)
         // Splice is used to delete some things in an array using the index,amount as parameter
         this.todo_list.splice(task_id,1)
       }else if(task_status === 'undo'){
         //* The undo button is only for the completed view so we use todo_completed list instead
-        this.todo_completed[task_id].netrual = true
-        this.todo_completed[task_id].completed = false
-        this.todo_completed[task_id].removed = false
+        // const USER_FIREBASE_URL = `https://morningpage-aa0e4.firebaseio.com/post/${task_at_hand.todo_id}.json`
+        task_completed.completed = false
+        task_completed.neutral = true // resetting the status of the task
+        task_completed.removed = false
         //! Note: If you unshift something keep them unshift or else the index will be messed up
-        this.todo_list.unshift(this.todo_completed[task_id]) // So if this is undo we are going to push back the item
+        this.todo_list.unshift(task_completed) // So if this is undo we are going to push back the item
         this.todo_completed.splice(task_id, 1)
       }else{ // At this point the user just wants to remove the task
         // The idea behind this is that we use mode to see which array we need to edit
         if(mode === 'normal_mode'){
-          task_at_hand.removed = true
-          task_at_hand.neutral = false
+          const USER_FIREBASE_URL = `https://morningpage-aa0e4.firebaseio.com/post/${task_at_hand.todo_id}.json`
           task_at_hand.completed = false
+          task_at_hand.neutral = false
+          task_at_hand.removed = true
           this.todo_list.splice(task_id,1)
-          let delete_url = `https://morningpage-aa0e4.firebaseio.com/post/${task_at_hand.todo_id}.json`
-          axios.delete(delete_url)
+          axios.delete(USER_FIREBASE_URL)
+           console.log('We are in normal mode')
 
-        }else{
-          this.todo_completed[task_id].removed = true
-          this.todo_completed[task_id].neutral = false
-          this.todo_completed[task_id].completed = false
+        }else{ // We are in completed_mode
+          const USER_FIREBASE_URL = `https://morningpage-aa0e4.firebaseio.com/post/${task_completed.todo_id}.json`
+          task_completed.completed = false
+          task_completed.neutral = false
+          task_completed.removed = true
           this.todo_completed.splice(task_id,1)
+          axios.delete(USER_FIREBASE_URL)
+          console.log('We are in completed mode',`COMPLETED TASK ID: ${task_completed.todo_id}`)
         }
-
       }
     }
   },
   created(){
-    axios.get('https://morningpage-aa0e4.firebaseio.com/post.json').then(obj=>{
+    axios.get(this.firebase_db_url).then(obj=>{
       let todo_info = []
-      for(let key in obj.data){
-        obj.data[key].todo_id = key // Basically each time we are setting a key called todo_id to a value of the firebase id
-        todo_info.unshift(obj.data[key])
+      for(let firebase_id in obj.data){
+        obj.data[firebase_id].todo_id = firebase_id // Basically each time we are setting a key called todo_id to a value of the firebase id
+        todo_info.unshift(obj.data[firebase_id])
       }
       this.todo_list = todo_info
       console.log(todo_info)
     })
-  }
+  },
 }
 </script>
 <style scoped>
