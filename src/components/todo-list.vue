@@ -67,7 +67,7 @@
       <h2 id="enter-todo-title">Add a To-Do item to your list!</h2>
       <input class='todo_input' placeholder="Add an item to your list" v-model="todo" @keyup.enter="add_todo"><br>
       <button v-if="!view_completed_mode" @click="view_completed_mode = !view_completed_mode">View completed</button>
-      <button v-else @click="view_completed_mode = !view_completed_mode">View To-Do List</button>
+      <button v-else @click="completedView">View To-Do List</button>
     </div>
 
   </div>
@@ -155,7 +155,7 @@ export default{
           task_at_hand.removed = true
           this.todo_list.splice(task_id,1)
           axios.delete(USER_FIREBASE_URL)
-           console.log('We are in normal mode')
+          console.log('We are in normal mode')
 
         }else{ // We are in completed_mode
           const USER_FIREBASE_URL = `https://morningpage-aa0e4.firebaseio.com/post/${task_completed.todo_id}.json`
@@ -167,6 +167,19 @@ export default{
           console.log('We are in completed mode',`COMPLETED TASK ID: ${task_completed.todo_id}`)
         }
       }
+    },
+    completedView(){
+      // Refresh the page with new data which will add back on the new id
+      let todo_completed_list = []
+      axios.get(this.firebase_db_url)
+      .then(obj => {
+        for(let fb_id in obj.data){
+          obj.data[fb_id].todo_completed_id = fb_id
+          todo_completed_list.unshift(obj.data[fb_id])
+        }
+      })
+      this.todo_completed = todo_completed_list
+      this.view_completed_mode = true
     }
   },
   created(){
