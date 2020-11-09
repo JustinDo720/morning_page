@@ -116,7 +116,8 @@ export default{
         }
         this.todo_list.unshift(todo_info) // Unshift basically pushes the obj in front instead of behind
         axios.post(this.firebase_db_url, todo_info).then(obj =>{
-          console.log('Success',obj)
+          console.log('Success')
+          console.log(obj.data.name)
         })
       }
       // Resets the input filed to become blank
@@ -125,6 +126,7 @@ export default{
     updateStatus: function(task_id, task_status, mode){
       let task_at_hand = this.todo_list[task_id]
       let task_completed = this.todo_completed[task_id]
+      console.log(task_at_hand, task_completed)
       // This is the normal url for the firebase
       //const USER_FIREBASE_URL = `https://morningpage-aa0e4.firebaseio.com/post/${task_at_hand.todo_id}.json`
 
@@ -159,7 +161,6 @@ export default{
           task_at_hand.removed = true
           this.todo_list.splice(task_id,1)
           axios.delete(USER_FIREBASE_URL)
-          console.log('We are in normal mode')
 
         }else{ // We are in completed_mode
           const USER_FIREBASE_URL = `https://morningpage-aa0e4.firebaseio.com/post/${task_completed.todo_id}.json`
@@ -168,7 +169,6 @@ export default{
           task_completed.removed = true
           this.todo_completed.splice(task_id,1)
           axios.delete(USER_FIREBASE_URL)
-          console.log('We are in completed mode',`COMPLETED TASK ID: ${task_completed.todo_id}`)
         }
       }
     },
@@ -199,12 +199,9 @@ export default{
           todo_info.unshift(obj.data[firebase_id])
         }
 
-        // Basically each time we are setting a key called todo_id to a value of the firebase id
-        obj.data[firebase_id].todo_id = firebase_id
-        todo_info.unshift(obj.data[firebase_id])
-
       }
       this.todo_list = todo_info
+      console.log(this.todo_list)
     })
   },
 }
