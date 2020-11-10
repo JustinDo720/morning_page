@@ -67,7 +67,7 @@
       <h2 id="enter-todo-title">Add a To-Do item to your list!</h2>
       <input class='todo_input' placeholder="Add an item to your list" v-model="todo" @keyup.enter="add_todo"><br>
       <button v-if="!view_completed_mode" @click="view_completed_mode = !view_completed_mode">View completed</button>
-      <button v-else @click="completedView">View To-Do List</button>
+      <button v-else @click="view_completed_mode = !view_completed_mode">View To-Do List</button>
     </div>
 
   </div>
@@ -128,7 +128,6 @@ export default{
               obj.data[firebase_id].todo_id = firebase_id
               todo_info.unshift(obj.data[firebase_id])
             }
-
           }
           this.todo_list = todo_info
         })
@@ -139,9 +138,6 @@ export default{
     updateStatus: function(task_id, task_status, mode){
       let task_at_hand = this.todo_list[task_id]
       let task_completed = this.todo_completed[task_id]
-      console.log(task_at_hand, task_completed)
-      // This is the normal url for the firebase
-      //const USER_FIREBASE_URL = `https://morningpage-aa0e4.firebaseio.com/post/${task_at_hand.todo_id}.json`
 
       if(task_status === 'completed'){
         //* So the idea is that we set the status to true then push this item to the completed task array
@@ -184,25 +180,11 @@ export default{
         }
       }
     },
-    completedView() {
-      // Refresh the page with new data which will add back on the new id
-      let todo_completed_list = []
-      axios.get(this.firebase_db_url).then(obj => {
-        for (let firebase_id in obj.data) {
-          // We only want completed items
-          if (obj.data[firebase_id].completed) {
-            obj.data[firebase_id].todo_id = firebase_id
-            todo_completed_list.unshift(obj.data[firebase_id])
-          }
-        }
-        this.view_completed_mode = !this.view_completed_mode
-        this.todo_completed = todo_completed_list
-      })
-    }
   },
   created(){
     axios.get(this.firebase_db_url).then(obj=>{
       let todo_info = []
+      let todo_completed_list = []
       for(let firebase_id in obj.data){
 
         if(obj.data[firebase_id].neutral){
@@ -210,10 +192,15 @@ export default{
           obj.data[firebase_id].todo_id = firebase_id
           todo_info.unshift(obj.data[firebase_id])
         }
-
+        // Refresh the page with new data which will add back on the new id
+        if(obj.data[firebase_id].completed){
+          obj.data[firebase_id].todo_id = firebase_id
+          todo_completed_list.unshift(obj.data[firebase_id])
+          this.todo_completed = todo_completed_list
+        }
       }
       this.todo_list = todo_info
-      console.log(this.todo_list)
+      this.todo_completed = todo_completed_list
     })
   },
 }
