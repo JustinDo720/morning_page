@@ -94,16 +94,16 @@ export default{
     }
   },
   methods:{
-    add_todo: function(){
+    async add_todo() {
       //* Makes sure that the user input wasn't on accident
       if(this.todo !== ''){
         let task_date = new Date()
         let show_date = `
-        ${this.days_of_the_week[task_date.getDay()]},
-        ${task_date.getDate()}
-        ${this.months[task_date.getMonth()]}
-        ${task_date.getFullYear()}.
-        ` // e.g Monday, 2 November 2020
+          ${this.days_of_the_week[task_date.getDay()]},
+          ${task_date.getDate()}
+          ${this.months[task_date.getMonth()]}
+          ${task_date.getFullYear()}.
+          ` // e.g Monday, 2 November 2020
         let show_time =`${task_date.getHours()}:${task_date.getMinutes()}`
 
         let todo_info = {
@@ -114,14 +114,27 @@ export default{
           'task_date': `${show_date} ${show_time}`,
 
         }
-        this.todo_list.unshift(todo_info) // Unshift basically pushes the obj in front instead of behind
-        axios.post(this.firebase_db_url, todo_info).then(obj =>{
-          console.log('Success')
-          console.log(obj.data.name)
+        await axios.post(this.firebase_db_url, todo_info).then(obj =>{
+          // Next try to work with this method
+          console.log('Success',obj.data.name)
+          this.todo = ''
         })
+        axios.get(this.firebase_db_url).then(obj=>{
+          let todo_info = []
+          for(let firebase_id in obj.data){
+
+            if(obj.data[firebase_id].neutral){
+              // Basically each time we are setting a key called todo_id to a value of the firebase id
+              obj.data[firebase_id].todo_id = firebase_id
+              todo_info.unshift(obj.data[firebase_id])
+            }
+
+          }
+          this.todo_list = todo_info
+        })
+
       }
-      // Resets the input filed to become blank
-      this.todo = ''
+
     },
     updateStatus: function(task_id, task_status, mode){
       let task_at_hand = this.todo_list[task_id]
@@ -138,9 +151,8 @@ export default{
         task_at_hand.removed = false
         this.todo_completed.unshift(task_at_hand)
         // Updates the completed, neutral, removed values in the modified todo item
-        axios.put(USER_FIREBASE_URL, task_at_hand).then(data=>{
-          console.log(data.data)
-        })
+        axios.put(USER_FIREBASE_URL, task_at_hand)
+        console.log(USER_FIREBASE_URL)
         // Splice is used to delete some things in an array using the index,amount as parameter
         this.todo_list.splice(task_id,1)
       }else if(task_status === 'undo'){
