@@ -153,12 +153,13 @@ export default{
         this.todo_list.splice(task_id,1)
       }else if(task_status === 'undo'){
         //* The undo button is only for the completed view so we use todo_completed list instead
-        // const USER_FIREBASE_URL = `https://morningpage-aa0e4.firebaseio.com/post/${task_at_hand.todo_id}.json`
+        const USER_FIREBASE_URL = `https://morningpage-aa0e4.firebaseio.com/post/${task_completed.todo_id}.json`
         task_completed.completed = false
         task_completed.neutral = true // resetting the status of the task
         task_completed.removed = false
         //! Note: If you unshift something keep them unshift or else the index will be messed up
         this.todo_list.unshift(task_completed) // So if this is undo we are going to push back the item
+        axios.put(USER_FIREBASE_URL, task_completed)
         this.todo_completed.splice(task_id, 1)
       }else{ // At this point the user just wants to remove the task
         // The idea behind this is that we use mode to see which array we need to edit
