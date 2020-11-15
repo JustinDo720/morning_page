@@ -5,7 +5,16 @@
   <div v-for="(todo,index) in filteredTodos" :key="index">
     <h1 id="todo_item">
       {{todo.todo_item}}
+      <button class='deleted'
+              @click="updateStatus(index,'deleted')">
+        &cross;
+      </button>
+      <button class='completed'
+              @click="updateStatus(index,'completed')">
+        &checkmark;
+      </button>&nbsp;
     </h1>
+
     <h4 id="task_date">
       {{todo.task_date}}
     </h4>
@@ -29,7 +38,6 @@ export default{
       let firebase_todos = []
       for(let firebase_id in obj.data){
         obj.data[firebase_id].todo_id = firebase_id
-        console.log(obj.data[firebase_id])
         if(obj.data[firebase_id].neutral){
           firebase_todos.unshift(obj.data[firebase_id])
         }
@@ -40,8 +48,29 @@ export default{
   computed:{
     filteredTodos: function(){
       return this.fetched_todos.filter(todo=>{
-        return todo.todo_item.match(this.searchTodo)
+        return todo.todo_item.toLowerCase().match(this.searchTodo.toLowerCase())
       })
+    }
+  },
+  methods:{
+    updateStatus(todo_id, mode){
+      let task_at_hand = this.fetched_todos[todo_id]
+      if(mode === 'completed'){
+        const USER_FIREBASE_URL = `https://morningpage-aa0e4.firebaseio.com/post/${task_at_hand.todo_id}.json`
+        task_at_hand.completed = true
+        task_at_hand.neutral = false
+        task_at_hand.removed = false
+        // Updates the completed, neutral, removed values in the modified todo item
+        axios.put(USER_FIREBASE_URL, task_at_hand)
+        this.fetched_todos.splice(todo_id,1)
+      }else{
+        const USER_FIREBASE_URL = `https://morningpage-aa0e4.firebaseio.com/post/${task_at_hand.todo_id}.json`
+        task_at_hand.completed = false
+        task_at_hand.neutral = false
+        task_at_hand.removed = true
+        axios.delete(USER_FIREBASE_URL)
+        this.fetched_todos.splice(todo_id,1)
+      }
     }
   }
 }
@@ -68,4 +97,23 @@ export default{
   box-shadow: 0 1px 5px 0, rgba(0,0,0,0.15);
   transform: translateY(-3px);
 }
+
+.completed{
+  background: transparent;
+  color: green;
+  float: right;
+}
+
+.deleted{
+  background: transparent;
+  color: darkred;
+  float: right;
+}
+
+button{
+  background: transparent;
+  border: none;
+  font-size: 18px
+}
+
 </style>
