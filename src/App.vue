@@ -9,11 +9,12 @@
 
 <script>
 //* Imports go here
-
+require('dotenv').config({path: '.env'});
 export default{
   components:{
   },
   created(){
+    console.log(process.env.VUE_APP_API_HOST);
   }
 
 }
