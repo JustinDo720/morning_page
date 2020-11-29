@@ -12,6 +12,7 @@
     "core-js": "^3.6.5",
     "dotenv": "^8.2.0",
     "firebase": "^8.0.1",
+    "touch": "^3.1.0",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vuefire": "^2.2.0-alpha.0"
