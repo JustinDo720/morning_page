@@ -21,11 +21,11 @@ export default {
   created() {
     const options = {
       method: 'GET',
-      url: process.env.VUE_APP_API_URL,
-      params: {token: process.env.VUE_APP_API_TOKEN},
+      url: process.env.VUE_APP_QUOTE_API_URL,
+      params: {token: process.env.VUE_APP_QUOTE_API_TOKEN},
       headers: {
         'x-rapidapi-key': process.env.VUE_APP_API_KEY,
-        'x-rapidapi-host': process.env.VUE_APP_API_HOST
+        'x-rapidapi-host': process.env.VUE_APP_QUOTE_API_HOST
       }
     }
     axios.request(options).then((obj) =>{
