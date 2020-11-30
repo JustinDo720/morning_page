@@ -1,8 +1,8 @@
 <template>
   <div v-for="(news, news_id) in news_from_request" :key="news_id">
-    <h1>
+    <h3>
       {{ news.title }}
-    </h1>
+    </h3>
   </div>
 </template>
 <script>
@@ -25,7 +25,7 @@ export default{
       }
     };
 
-    axios.request(options).then(function (response) {
+    axios.request(options).then((response)=> {
       let all_news = response.data.item
       let news_info = []
 

@@ -22,18 +22,16 @@ export default {
     const options = {
       method: 'GET',
       url: process.env.VUE_APP_QUOTE_API_URL,
-      params: {token: process.env.VUE_APP_QUOTE_API_TOKEN},
       headers: {
         'x-rapidapi-key': process.env.VUE_APP_API_KEY,
         'x-rapidapi-host': process.env.VUE_APP_QUOTE_API_HOST
       }
     }
     axios.request(options).then((obj) =>{
-      console.log(obj.data.author, obj.data.text)
-      this.quote_of_day = `${obj.data.text}"`
-      this.quote_author = obj.data.author
+      console.log(obj.data.message, obj.data.author)
+      this.quote_of_day = obj.data.message
+      this.quote_author = obj.data.author.authorName
     })
-    console.log(options)
   }
 }
 </script>
