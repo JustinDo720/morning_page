@@ -1,8 +1,11 @@
 <template>
   <div v-for="(news, news_id) in news_from_request" :key="news_id">
-    <h3>
-      {{ news.title }}
-    </h3>
+    <a :href="news.link">
+      <h3>
+        {{ news.title }}
+      </h3>
+    </a>
+
   </div>
 </template>
 <script>
