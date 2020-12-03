@@ -44,7 +44,6 @@ export default{
         }
       }
       this.news_from_request = news_info
-      console.log(this.news_from_request)
     }).catch(function (error) {
       console.error(error);
     });
