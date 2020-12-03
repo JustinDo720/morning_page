@@ -10,15 +10,15 @@
 ---
 
 ## Objectives
-* [ ] To-do List
+* [x] To-do List
 * [ ] Weather App
-* [ ] News App
-* [ ] Quote of the Day
+* [x] News App
+* [x] Quote of the Day
 * [ ] Deploy with Netlify or maybe Firebase Hosting
 
 
 ### Mini goals
 * [x] Tied Vue with Firebase realtime database
 * [x] Used axios to fetch and post data
-* [ ] Tie the child component to Home.Vue
+* [x] Tie the child component to Home.Vue
 * [ ] Refactor To-do List code. Is there a way to reduce the amount of GET request?

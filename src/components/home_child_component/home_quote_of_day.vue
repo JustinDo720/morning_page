@@ -28,7 +28,6 @@ export default {
       }
     }
     axios.request(options).then((obj) =>{
-      console.log(obj.data.message, obj.data.author)
       this.quote_of_day = obj.data.message
       this.quote_author = obj.data.author.authorName
     })
