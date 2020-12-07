@@ -50,3 +50,13 @@ export default{
   }
 }
 </script>
+<style scoped>
+
+a{
+  text-decoration: none;
+}
+
+h3{
+  color: black;
+}
+</style>
