@@ -5,7 +5,10 @@
         {{ r1l_title }}
       </h1>
       <hr>
-      <home_quote_of_day></home_quote_of_day>
+      <p>
+        Done
+      </p>
+      <!--<home_quote_of_day></home_quote_of_day>-->
     </div>
     <div class="todo">
       <h1>
@@ -20,7 +23,10 @@
       </h1>
       <hr>
       <div>
-        <home_news></home_news>
+        <p>
+          Done
+        </p>
+        <!--<home_news></home_news>-->
       </div>
     </div>
 
@@ -30,26 +36,30 @@
       </h1>
       <hr>
       <div>
-        <home_weather></home_weather>
+        <p>
+          Done
+        </p>
+        <!--<home_weather></home_weather> -->
       </div>
     </div>
   </div>
 </template>
 
 <script>
+
 import home_todo from '@/components/home_child_component/home_todo'
-import home_news from "@/components/home_child_component/home_news";
-import home_quote_of_day from "@/components/home_child_component/home_quote_of_day";
-import home_weather from "@/components/home_child_component/home_weather";
+// import home_news from "@/components/home_child_component/home_news";
+// import home_quote_of_day from "@/components/home_child_component/home_quote_of_day";
+// import home_weather from "@/components/home_child_component/home_weather";
 
 
 export default{
   name: 'home_page',
   components: {
     home_todo,
-    home_quote_of_day,
-    home_news,
-    home_weather,
+    //home_quote_of_day,
+    //home_news,
+    //home_weather,
   },
   data(){
     return{

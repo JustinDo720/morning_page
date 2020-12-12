@@ -30,7 +30,7 @@ export default{
       title: 'Home Todo',
       searchTodo: '',
       fetched_todos: [], // In progress todos or the ones that are neutral
-      firebase_db_url: 'https://morningpage-aa0e4.firebaseio.com/post.json'
+      firebase_db_url: 'https://testing-todo-7bc25-default-rtdb.firebaseio.com/post.json'
     }
   },
   created(){
@@ -56,7 +56,7 @@ export default{
     updateStatus(todo_id, mode){
       let task_at_hand = this.fetched_todos[todo_id]
       if(mode === 'completed'){
-        const USER_FIREBASE_URL = `https://morningpage-aa0e4.firebaseio.com/post/${task_at_hand.todo_id}.json`
+        const USER_FIREBASE_URL = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/post/${task_at_hand.todo_id}.json`
         task_at_hand.completed = true
         task_at_hand.neutral = false
         task_at_hand.removed = false
@@ -64,7 +64,7 @@ export default{
         axios.put(USER_FIREBASE_URL, task_at_hand)
         this.fetched_todos.splice(todo_id,1)
       }else{
-        const USER_FIREBASE_URL = `https://morningpage-aa0e4.firebaseio.com/post/${task_at_hand.todo_id}.json`
+        const USER_FIREBASE_URL = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/post/${task_at_hand.todo_id}.json`
         task_at_hand.completed = false
         task_at_hand.neutral = false
         task_at_hand.removed = true
