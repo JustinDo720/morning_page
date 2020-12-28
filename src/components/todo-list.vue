@@ -90,7 +90,7 @@ export default{
       months : [ "January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December" ],
       days_of_the_week : ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
-      firebase_db_url: 'https://morningpage-aa0e4.firebaseio.com/post.json'
+      firebase_db_url: 'https://testing-todo-7bc25-default-rtdb.firebaseio.com/post.json'
     }
   },
   methods:{
@@ -141,7 +141,7 @@ export default{
 
       if(task_status === 'completed'){
         //* So the idea is that we set the status to true then push this item to the completed task array
-        const USER_FIREBASE_URL = `https://morningpage-aa0e4.firebaseio.com/post/${task_at_hand.todo_id}.json`
+        const USER_FIREBASE_URL = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/post/${task_at_hand.todo_id}.json`
         task_at_hand.completed = true
         task_at_hand.neutral = false
         task_at_hand.removed = false
@@ -153,7 +153,7 @@ export default{
         this.todo_list.splice(task_id,1)
       }else if(task_status === 'undo'){
         //* The undo button is only for the completed view so we use todo_completed list instead
-        const USER_FIREBASE_URL = `https://morningpage-aa0e4.firebaseio.com/post/${task_completed.todo_id}.json`
+        const USER_FIREBASE_URL = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/post/${task_completed.todo_id}.json`
         task_completed.completed = false
         task_completed.neutral = true // resetting the status of the task
         task_completed.removed = false
@@ -164,7 +164,7 @@ export default{
       }else{ // At this point the user just wants to remove the task
         // The idea behind this is that we use mode to see which array we need to edit
         if(mode === 'normal_mode'){
-          const USER_FIREBASE_URL = `https://morningpage-aa0e4.firebaseio.com/post/${task_at_hand.todo_id}.json`
+          const USER_FIREBASE_URL = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/post/${task_at_hand.todo_id}.json`
           task_at_hand.completed = false
           task_at_hand.neutral = false
           task_at_hand.removed = true
@@ -172,7 +172,7 @@ export default{
           axios.delete(USER_FIREBASE_URL)
 
         }else{ // We are in completed_mode
-          const USER_FIREBASE_URL = `https://morningpage-aa0e4.firebaseio.com/post/${task_completed.todo_id}.json`
+          const USER_FIREBASE_URL = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/post/${task_completed.todo_id}.json`
           task_completed.completed = false
           task_completed.neutral = false
           task_completed.removed = true
