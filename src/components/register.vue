@@ -37,8 +37,8 @@ export default{
   },
   methods: {
     register: function(e){
-      firebaseInit.auth().createUserWithEmailAndPassword(this.email, this.password).then(user=>{
-        alert(`Account created for ${user.email}`)
+      firebaseInit.auth().createUserWithEmailAndPassword(this.email, this.password).then(obj=>{
+        alert(`Account created for ${obj.user.email}`)
         // We are going to redirect after they register to the homepage
         this.$router.push('/')
       },

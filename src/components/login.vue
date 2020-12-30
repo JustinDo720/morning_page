@@ -8,13 +8,13 @@
             <form>
               <div class="input-field">
                 <i class="material-icons prefix">email</i>
-                <input type="text" id="email" placeholder='Email'>
+                <input v-model='email' type="text" id="email" placeholder='Email'>
               </div>
               <div class="input-field">
                 <i class="material-icons prefix">lock</i>
-                <input type="password" id="password" placeholder='Password'>
+                <input v-model='password' type="password" id="password" placeholder='Password'>
               </div>
-              <button class="btn btn-large grey ligten-4 black-text">Login</button>
+              <button @click="login" class="btn btn-large grey ligten-4 black-text">Login</button>
             </form>
           </div>
 
@@ -25,13 +25,29 @@
 </template>
 
 <script>
+import firebaseInit from "./db.js";
+
 export default{
   name: 'login',
   data(){
     return{
-
+      email: '',
+      password: '',
     }
-  }
+  },
+  methods: {
+    login: function(e){
+      firebaseInit.auth().signInWithEmailAndPassword(this.email, this.password).then(obj=>{
+            alert(`You are logged in as ${obj.user.email}`)
+            // We are going to redirect after they register to the homepage
+            this.$router.push('/')
+          },
+          err=>{
+            alert(err.message)
+          })
+      e.preventDefault()
+    }
+  },
 }
 </script>
 

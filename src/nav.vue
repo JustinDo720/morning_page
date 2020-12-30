@@ -13,13 +13,32 @@
           <li>
             <router-link to="/register" >Register</router-link>
           </li>
+          <li>
+            <button @:click= 'logout' class='btn black'>Logout</button>
+          </li>
         </ul>
       </div>
     </div>
   </nav>
 </template>
+
 <script>
+import firebaseApp from './components/db.js'
+
 export default{
-  name: 'navigation'
+  name: 'navigation',
+  data(){
+    return{
+      isLoggedIn: false, // Default value
+      currentUser: false,
+    }
+  },
+  methods: {
+    logout: function() {
+      firebaseApp.auth().signOut().then(()=>{
+        this.$router.push('/login')
+      })
+    }
+  }
 }
 </script>
