@@ -1,16 +1,18 @@
 <template>
   <div id="app">
-    <router-link to="/">Home Page</router-link>&nbsp;
-    <router-link to="/todo">Todo-Testing Page</router-link> &nbsp;
+    <navigation></navigation>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
 //* Imports go here
+import navigation from '@/nav.vue'
+
 require('dotenv').config({path: '.env'});
 export default{
   components:{
+    navigation
   },
 
 }
