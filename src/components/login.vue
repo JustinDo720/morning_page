@@ -8,13 +8,11 @@
             <form>
               <div class="input-field">
                 <i class="material-icons prefix">email</i>
-                <input type="text" id="email">
-                <label class="white-text" for="email">Email</label>
+                <input type="text" id="email" placeholder='Email'>
               </div>
               <div class="input-field">
                 <i class="material-icons prefix">lock</i>
-                <input type="password" id="password">
-                <label class="white-text" for="password">Password</label>
+                <input type="password" id="password" placeholder='Password'>
               </div>
               <button class="btn btn-large grey ligten-4 black-text">Login</button>
             </form>
@@ -36,3 +34,9 @@ export default{
   }
 }
 </script>
+
+<style scoped>
+::placeholder{
+  color: white;
+}
+</style>

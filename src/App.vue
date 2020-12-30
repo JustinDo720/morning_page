@@ -7,12 +7,12 @@
 
 <script>
 //* Imports go here
-import nav from '@/nav.vue'
+import navigation from '@/nav.vue'
 
 require('dotenv').config({path: '.env'});
 export default{
   components:{
-    navigation: nav
+    navigation
   },
 
 }
