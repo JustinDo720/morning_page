@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import firebaseInit from './db.js'
+import firebaseApp from './db.js'
 
 export default{
   name: 'register',
@@ -37,10 +37,11 @@ export default{
   },
   methods: {
     register: function(e){
-      firebaseInit.auth().createUserWithEmailAndPassword(this.email, this.password).then(obj=>{
+      firebaseApp.auth().createUserWithEmailAndPassword(this.email, this.password).then(obj=>{
         alert(`Account created for ${obj.user.email}`)
         // We are going to redirect after they register to the homepage
         this.$router.push('/')
+        console.log(firebaseApp.auth().currentUser.email)
       },
       err=>{
         alert(err.message)

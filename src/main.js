@@ -6,10 +6,11 @@ import firebaseApp from "@/components/db";
 let appController;
 firebaseApp.auth().onAuthStateChanged(user=>{
   if(user){
-    if(!appController){
-      appController = createApp(App)
-      appController.use(router)
-      appController.mount("#app");
-    }
+    console.log(user.email)
   }
-      })
+  if(!appController){
+    appController = createApp(App)
+    appController.use(router)
+    appController.mount("#app");
+  }
+})
