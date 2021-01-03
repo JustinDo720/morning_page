@@ -1,28 +1,31 @@
 <template>
   <div id="app-container" class="grid-container">
-    <div class="quote-of-day">
-      <h1>
-        {{ r1l_title }}
-      </h1>
-      <hr>
-      <p>
-        Done
-      </p>
-      <!--<home_quote_of_day></home_quote_of_day>-->
+    <div class="quote-of-day card">
+      <div class='card-content'>
+        <span class='card-title'>
+            {{ r1l_title }}
+        </span>
+        <p>
+          Done
+        </p>
+        <!--<home_quote_of_day></home_quote_of_day>-->
+      </div>
     </div>
-    <div class="todo">
-      <h1>
-        {{r1m_title}}
-      </h1>
-      <hr>
-      <home_todo></home_todo>
+
+    <div class="todo card">
+      <div class='card-content'>
+        <span class='card-title'>
+          {{r1m_title}}
+        </span>
+        <home_todo></home_todo>
+      </div>
     </div>
-    <div class="news">
-      <h1>
-        {{ r1r_title }}
-      </h1>
-      <hr>
-      <div>
+
+    <div class="news card">
+      <div class='card-content'>
+        <span class='card-title'>
+          {{ r1r_title }}
+        </span>
         <p>
           Done
         </p>
@@ -30,18 +33,18 @@
       </div>
     </div>
 
-    <div class="weather">
-      <h1>
-        {{ r2l_title }}
-      </h1>
-      <hr>
-      <div>
+    <div class="weather card">
+      <div class='card-content'>
+        <span class='card-title'>
+          {{ r2l_title }}
+        </span>
         <p>
           Done
         </p>
         <!--<home_weather></home_weather> -->
       </div>
     </div>
+
   </div>
 </template>
 
@@ -82,9 +85,11 @@ export default{
   grid-row-gap: 1em;
   grid-auto-rows: minmax(100px,auto);
   align-items: start;
+  margin: 10px;
+  margin-left: 5px;
 }
 .grid-container > div{
-  background: deepskyblue;
+  background: cadetblue;
   text-align:center;
   overflow:hidden;
 }

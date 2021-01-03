@@ -1,9 +1,16 @@
 <template>
-  <div id="search_box">
-    <input class='searchBox' placeholder="Search For Your Todos" v-model="searchTodo">
+  <div id='searchBox' class='input-field'>
+    <input id='search' type='text' class='todo_input validate black-text' v-model="searchTodo">
+    <label for='search' class='black-text'>
+      <i class='material-icons'>
+        search
+      </i>
+
+      Search For Your Todos
+    </label>
   </div>
   <div v-for="(todo,index) in filteredTodos" :key="index">
-    <h1 id="todo_item">
+    <p id="todo_item" class='flow-text'>
       {{todo.todo_item}}
       <button class='deleted'
               @click="updateStatus(index,'deleted')">
@@ -13,11 +20,11 @@
               @click="updateStatus(index,'completed')">
         &checkmark;
       </button>&nbsp;
-    </h1>
+    </p>
 
-    <h4 id="task_date">
+    <p id="task_date">
       {{todo.task_date}}
-    </h4>
+    </p>
   </div>
 </template>
 <script>
@@ -96,6 +103,17 @@ export default{
 .searchBox:focus{
   box-shadow: 0 1px 5px 0, rgba(0,0,0,0.15);
   transform: translateY(-3px);
+}
+
+.todo_input{
+  width: 400px;
+  border: 1px solid;
+  border-radius: 3px;
+  font-size: 15px;
+  padding: 0 20px;
+  line-height: 30px;
+  -moz-transition: all 0.4s ease; /* Transition for Mozilla! */
+  -webkit-transition: all 0.4s ease; /* For other browsers */
 }
 
 .completed{
