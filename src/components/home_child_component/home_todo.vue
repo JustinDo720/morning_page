@@ -1,9 +1,19 @@
 <template>
-  <div id="search_box">
-    <input class='searchBox' placeholder="Search For Your Todos" v-model="searchTodo">
-  </div>
+  <form>
+    <div class='input-field'>
+      <input id='search' type='text' class='validate black-text' v-model="searchTodo" >
+      <label for='search' class='black-text'>
+        <i class='material-icons'>
+          search
+        </i>
+
+        Search For Your Todos
+      </label>
+    </div>
+  </form>
+
   <div v-for="(todo,index) in filteredTodos" :key="index">
-    <h1 id="todo_item">
+    <p id="todo_item" class='flow-text'>
       {{todo.todo_item}}
       <button class='deleted'
               @click="updateStatus(index,'deleted')">
@@ -13,11 +23,11 @@
               @click="updateStatus(index,'completed')">
         &checkmark;
       </button>&nbsp;
-    </h1>
+    </p>
 
-    <h4 id="task_date">
+    <p id="task_date">
       {{todo.task_date}}
-    </h4>
+    </p>
   </div>
 </template>
 <script>

@@ -5,7 +5,7 @@
         <router-link to="/" class="brand-logo left">Home Page</router-link>
         <ul class="right">
           <span v-if='currentUser' class='email black-text left'>
-            Welcome {{ currentUser }}
+            Welcome, {{ currentUser }}
           </span>
           <li>
             <router-link to="/todo" >Todo-Testing Page</router-link>

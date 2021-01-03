@@ -8,11 +8,13 @@
             <form>
               <div class="input-field">
                 <i class="material-icons prefix">email</i>
-                <input v-model='email' type="text" id="email" placeholder='Email'>
+                <input v-model='email' type="text" id="email">
+                <label class='white-text'>Email</label>
               </div>
               <div class="input-field">
                 <i class="material-icons prefix">lock</i>
-                <input v-model='password' type="password" id="password" placeholder='Password'>
+                <input v-model='password' type="password" id="password">
+                <label class='white-text'>Password</label>
               </div>
               <button @click="login" class="btn btn-large grey ligten-4 black-text">Login</button>
             </form>
