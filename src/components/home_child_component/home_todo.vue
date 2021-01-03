@@ -1,14 +1,17 @@
 <template>
-  <div id='searchBox' class='input-field'>
-    <input id='search' type='text' class='todo_input validate black-text' v-model="searchTodo">
-    <label for='search' class='black-text'>
-      <i class='material-icons'>
-        search
-      </i>
+  <form>
+    <div class='input-field'>
+      <input id='search' type='text' class='validate black-text' v-model="searchTodo" >
+      <label for='search' class='black-text'>
+        <i class='material-icons'>
+          search
+        </i>
 
-      Search For Your Todos
-    </label>
-  </div>
+        Search For Your Todos
+      </label>
+    </div>
+  </form>
+
   <div v-for="(todo,index) in filteredTodos" :key="index">
     <p id="todo_item" class='flow-text'>
       {{todo.todo_item}}
@@ -103,17 +106,6 @@ export default{
 .searchBox:focus{
   box-shadow: 0 1px 5px 0, rgba(0,0,0,0.15);
   transform: translateY(-3px);
-}
-
-.todo_input{
-  width: 400px;
-  border: 1px solid;
-  border-radius: 3px;
-  font-size: 15px;
-  padding: 0 20px;
-  line-height: 30px;
-  -moz-transition: all 0.4s ease; /* Transition for Mozilla! */
-  -webkit-transition: all 0.4s ease; /* For other browsers */
 }
 
 .completed{
