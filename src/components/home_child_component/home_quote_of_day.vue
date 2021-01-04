@@ -1,10 +1,10 @@
 <template>
-  <h1>
+  <p class='flow-text green-text accent-3'>
     {{ quote_of_day }}
-  </h1>
-  <h4>
-    -- {{ quote_author }}
-  </h4>
+  </p>
+  <p class='flow-text green-text accent-3'>
+    - {{ quote_author }}
+  </p>
 </template>
 <script>
 import axios from 'axios'

@@ -1,9 +1,9 @@
 <template>
   <div v-for="(news, news_id) in news_from_request" :key="news_id">
     <a :href="news.link">
-      <h3>
+      <p class='flow-text indigo-text darken-3'>
         {{ news.title }}
-      </h3>
+      </p>
     </a>
 
   </div>
