@@ -1,6 +1,6 @@
 <template>
   <div id="app-container" class="grid-container">
-    <div class="quote-of-day card grey darken-1 gold-border">
+    <div class="quote-of-day card grey darken-3 gold-border">
       <div class='card-content'>
         <h4>
             {{ r1l_title }}
@@ -41,7 +41,7 @@
         <h4>
           {{ r2l_title }}
         </h4>
-        <h1>London</h1><h2>34°F</h2><h3>Clouds</h3>
+        <h3>London&nbsp; <a><i class='material-icons'>edit</i></a></h3><h4>34°F</h4><h5>Clouds</h5>
         <!--<home_weather></home_weather>-->
       </div>
     </div>
