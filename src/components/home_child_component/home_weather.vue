@@ -1,13 +1,13 @@
 <template>
-  <h1>
-    {{location_name}}
-  </h1>
-  <h2>
-    {{temp}}
-  </h2>
   <h3>
-    {{description}}
+    {{location_name}}
   </h3>
+  <h4>
+    {{temp}}
+  </h4>
+  <h5>
+    {{description}}
+  </h5>
 </template>
 <script>
 import axios from 'axios'
