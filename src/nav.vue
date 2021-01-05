@@ -39,7 +39,6 @@ export default{
   methods: {
     logout: function() {
       firebaseApp.auth().signOut().then(()=>{
-        console.log('Logged out')
         this.$router.push('/login')
 
         this.isLoggedIn = false
@@ -52,7 +51,6 @@ export default{
       // Then we are going to change some rules
       this.isLoggedIn = true
       this.currentUser = firebaseApp.auth().currentUser.email
-      console.log(`You are logged in as ${this.currentUser}`)
     }
   }
 }
