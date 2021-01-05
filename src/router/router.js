@@ -23,11 +23,9 @@ router.beforeEach((to, from, next) =>{
     // Check for requirements before each routes
     // If this is true then this route requires authentication.
     if(to.matched.some(record => record.meta.requiresAuth)){
-        console.log('requiredauth True')
         // Now we need to check if the user is logged in or not
         if(!firebaseApp.auth().currentUser){ // This is how we get our user
             // Go to login page is the user is not logged in
-            console.log('Not logged in')
             next({
                 path: '/login',
                 query:{
@@ -37,15 +35,12 @@ router.beforeEach((to, from, next) =>{
             })
         } else { // This means that we are logged in
             // Proceed to route
-            console.log('Logged In')
             next()
         }
     } else if(to.matched.some(record => record.meta.requiresGuest)){ // Now we are testing for requriesGuest
-        console.log('requiredguest True')
         // Now if the user is logged in then they're no longer guests
         if(firebaseApp.auth().currentUser){
             // Redirect them to home page
-            console.log('I am logged in?')
             next({
                 path:'/',
                 query:{
@@ -55,7 +50,6 @@ router.beforeEach((to, from, next) =>{
         }else {
             // Proceed to route
             next()
-            console.log('I am not logged in')
         }
     } else {
         // If no guard then we good to go

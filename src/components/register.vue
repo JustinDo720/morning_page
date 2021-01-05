@@ -43,7 +43,6 @@ export default{
         alert(`Account created for ${obj.user.email}`)
         // We are going to redirect after they register to the homepage
         this.$router.push('/')
-        console.log(firebaseApp.auth().currentUser.email)
       },
       err=>{
         alert(err.message)
