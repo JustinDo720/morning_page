@@ -97,7 +97,7 @@ export default{
   },
   methods:{
     async add_todo() {
-      let firebase_db_url = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${this.auth_user}.json`
+      let firebase_db_url = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${this.auth_user}/todo.json`
       console.log(firebase_db_url)
       console.log(this.auth_user)
       //* Makes sure that the user input wasn't on accident
@@ -150,7 +150,7 @@ export default{
 
       if(task_status === 'completed'){
         //* So the idea is that we set the status to true then push this item to the completed task array
-        const USER_FIREBASE_URL = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${this.auth_user}/${task_at_hand.todo_id}.json`
+        const USER_FIREBASE_URL = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${this.auth_user}/todo/${task_at_hand.todo_id}.json`
         task_at_hand.completed = true
         task_at_hand.neutral = false
         task_at_hand.removed = false
@@ -162,7 +162,7 @@ export default{
         this.todo_list.splice(task_id,1)
       }else if(task_status === 'undo'){
         //* The undo button is only for the completed view so we use todo_completed list instead
-        const USER_FIREBASE_URL = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${this.auth_user}/${task_completed.todo_id}.json`
+        const USER_FIREBASE_URL = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${this.auth_user}/todo/${task_completed.todo_id}.json`
         task_completed.completed = false
         task_completed.neutral = true // resetting the status of the task
         task_completed.removed = false
@@ -173,12 +173,12 @@ export default{
       }else{ // At this point the user just wants to remove the task
         // The idea behind this is that we use mode to see which array we need to edit
         if(mode === 'normal_mode'){
-          const USER_FIREBASE_URL = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${this.auth_user}/${task_at_hand.todo_id}.json`
+          const USER_FIREBASE_URL = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${this.auth_user}/todo/${task_at_hand.todo_id}.json`
           this.todo_list.splice(task_id,1)
           axios.delete(USER_FIREBASE_URL)
 
         }else{ // We are in completed_mode
-          const USER_FIREBASE_URL = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${this.auth_user}/${task_completed.todo_id}.json`
+          const USER_FIREBASE_URL = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${this.auth_user}/todo/${task_completed.todo_id}.json`
           console.log('I should be here rn')
           this.todo_completed.splice(task_id,1)
           axios.delete(USER_FIREBASE_URL)
@@ -187,12 +187,11 @@ export default{
     },
   },
   created(){
-    let user_fb = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${this.auth_user}.json`
+    let user_fb = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${this.auth_user}/todo.json`
     axios.get(user_fb).then(obj=>{
       let todo_info = []
       let todo_completed_list = []
       for(let firebase_id in obj.data){
-
         if(obj.data[firebase_id].neutral){
           // Basically each time we are setting a key called todo_id to a value of the firebase id
           obj.data[firebase_id].todo_id = firebase_id
