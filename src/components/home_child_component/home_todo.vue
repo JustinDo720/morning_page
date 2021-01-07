@@ -1,14 +1,18 @@
 <template>
   <form>
-    <div class='input-field'>
+    <div class='input-field' v-if='signedIn'>
       <input id='search' type='text' class='validate black-text' v-model="searchTodo" >
       <label for='search' class='black-text'>
         <i class='material-icons'>
           search
         </i>
-
         Search For Your Todos
       </label>
+    </div>
+    <div v-else>
+      <button @click='redirect_to_login' class='btn waves-effect waves-light'>
+        Login
+      </button>
     </div>
   </form>
 
@@ -32,6 +36,7 @@
 </template>
 <script>
 import axios from 'axios'
+import firebaseApp from "@/components/db";
 
 export default{
   name:'home_todo',
@@ -40,20 +45,29 @@ export default{
       title: 'Home Todo',
       searchTodo: '',
       fetched_todos: [], // In progress todos or the ones that are neutral
-      firebase_db_url: 'https://testing-todo-7bc25-default-rtdb.firebaseio.com/post.json'
+      signedIn: false, // We are going to use this to show the user's items or show the login button
     }
   },
   created(){
-    axios.get(this.firebase_db_url).then(obj=>{
-      let firebase_todos = []
-      for(let firebase_id in obj.data){
-        obj.data[firebase_id].todo_id = firebase_id
-        if(obj.data[firebase_id].neutral){
-          firebase_todos.unshift(obj.data[firebase_id])
+    try{
+      let auth_user = firebaseApp.auth().currentUser.uid
+      // If auth_user is not null then the user is signed in.
+      this.signedIn = true
+      let firebase_db_url = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${auth_user}/todo.json`
+      axios.get(firebase_db_url).then(obj=>{
+        let firebase_todos = []
+        for(let firebase_id in obj.data){
+          obj.data[firebase_id].todo_id = firebase_id
+          if(obj.data[firebase_id].neutral){
+            firebase_todos.unshift(obj.data[firebase_id])
+          }
         }
-      }
-      this.fetched_todos = firebase_todos
-    })
+        this.fetched_todos = firebase_todos
+      })
+    }catch (err) {
+      // If auth_user does not exist then the user is not signed in
+      this.signedIn = false
+    }
   },
   computed:{
     filteredTodos: function(){
@@ -81,6 +95,9 @@ export default{
         axios.delete(USER_FIREBASE_URL)
         this.fetched_todos.splice(todo_id,1)
       }
+    },
+    redirect_to_login(){
+      this.$router.push('/login')
     }
   }
 }
