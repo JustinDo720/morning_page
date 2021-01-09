@@ -8,18 +8,22 @@
             <form>
               <div class="input-field">
                 <i class="material-icons prefix">email</i>
-                <input v-model='email' type="text" id="email">
-                <label class='black-text'>Email</label>
+                <input v-model="email" type="text" id="email" />
+                <label class="black-text">Email</label>
               </div>
               <div class="input-field">
                 <i class="material-icons prefix">lock</i>
-                <input v-model='password' type="password" id="password">
-                <label class='black-text'>Password</label>
+                <input v-model="password" type="password" id="password" />
+                <label class="black-text">Password</label>
               </div>
-              <button @click = "register" class ="btn btn-large grey ligten-4 black-text">Register</button>
+              <button
+                @click="register"
+                class="btn btn-large grey ligten-4 black-text"
+              >
+                Register
+              </button>
             </form>
           </div>
-
         </div>
       </div>
     </div>
@@ -27,35 +31,39 @@
 </template>
 
 <script>
-import firebaseApp from './db.js'
+import firebaseApp from "./db.js";
 
-export default{
-  name: 'register',
-  data(){
-    return{
-      email: '',
-      password: '',
-    }
+export default {
+  name: "register",
+  data() {
+    return {
+      email: "",
+      password: ""
+    };
   },
   methods: {
-    register: function(e){
-      firebaseApp.auth().createUserWithEmailAndPassword(this.email, this.password).then(obj=>{
-        alert(`Account created for ${obj.user.email}`)
-        // We are going to redirect after they register to the homepage
-        this.$router.push('/')
-      },
-      err=>{
-        alert(err.message)
-      })
-      e.preventDefault()
+    register: function(e) {
+      firebaseApp
+        .auth()
+        .createUserWithEmailAndPassword(this.email, this.password)
+        .then(
+          obj => {
+            alert(`Account created for ${obj.user.email}`);
+            // We are going to redirect after they register to the homepage
+            this.$router.push("/");
+          },
+          err => {
+            alert(err.message);
+          }
+        );
+      e.preventDefault();
     }
-  },
-
-}
+  }
+};
 </script>
 
 <style scoped>
-::placeholder{
+::placeholder {
   color: black;
 }
 </style>
