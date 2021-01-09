@@ -8,18 +8,22 @@
             <form>
               <div class="input-field">
                 <i class="material-icons prefix">email</i>
-                <input v-model='email' type="text" id="email">
-                <label class='white-text'>Email</label>
+                <input v-model="email" type="text" id="email" />
+                <label class="white-text">Email</label>
               </div>
               <div class="input-field">
                 <i class="material-icons prefix">lock</i>
-                <input v-model='password' type="password" id="password">
-                <label class='white-text'>Password</label>
+                <input v-model="password" type="password" id="password" />
+                <label class="white-text">Password</label>
               </div>
-              <button @click="login" class="btn btn-large grey ligten-4 black-text">Login</button>
+              <button
+                @click="login"
+                class="btn btn-large grey ligten-4 black-text"
+              >
+                Login
+              </button>
             </form>
           </div>
-
         </div>
       </div>
     </div>
@@ -29,32 +33,37 @@
 <script>
 import firebaseInit from "./db.js";
 
-export default{
-  name: 'login',
-  data(){
-    return{
-      email: '',
-      password: '',
-    }
+export default {
+  name: "login",
+  data() {
+    return {
+      email: "",
+      password: ""
+    };
   },
   methods: {
-    login: function(e){
-      firebaseInit.auth().signInWithEmailAndPassword(this.email, this.password).then(obj=>{
-            alert(`You are logged in as ${obj.user.email}`)
+    login: function(e) {
+      firebaseInit
+        .auth()
+        .signInWithEmailAndPassword(this.email, this.password)
+        .then(
+          obj => {
+            alert(`You are logged in as ${obj.user.email}`);
             // We are going to redirect after they register to the homepage
-            this.$router.push('/')
+            this.$router.push("/");
           },
-          err=>{
-            alert(err.message)
-          })
-      e.preventDefault()
+          err => {
+            alert(err.message);
+          }
+        );
+      e.preventDefault();
     }
-  },
-}
+  }
+};
 </script>
 
 <style scoped>
-::placeholder{
+::placeholder {
   color: white;
 }
 </style>
