@@ -236,9 +236,25 @@
             edit
           </i>
         </button>
-        <modal_test v-if='edit_weather' :active-modal=true>
+        <modal_test v-if='edit_weather' :active-modal=true comp-name='weather'>
           <template v-slot:weather>
-            <input placeholder='Enter your location here'>
+            <!-- Body -->
+            <div class='input-field'>
+              <input
+                  id='location'
+                  type='text'
+                  class='validate black-text'
+                  v-model='city'
+                  style='width: 300px;'
+                  placeholder='Enter your city here'
+                  @keyup.enter='enterCity'>
+            </div>
+            <!-- Footer -->
+            <div >
+              <button class='btn-small green white-text' style='margin-bottom: 10px;' @click='enterCity'>
+                Enter
+              </button>
+            </div>
           </template>
         </modal_test>
       </div>
@@ -270,9 +286,15 @@ export default {
       r2l_title: "Weather", //* row 2 left title
       todo: [],
       edit_weather: false,
-      app_name: 'weather',
+      city: ''
     };
   },
+  methods:{
+    enterCity: function(){
+      console.log(this.city)
+    }
+  }
+
 };
 </script>
 
@@ -313,7 +335,7 @@ export default {
   grid-column-start: 1;
   grid-row-start: 2;
   grid-row-end: 3;
-  height: 450px;
+  height: 330px;
 }
 
 /* News */
@@ -334,4 +356,5 @@ export default {
 .gold-border {
   border: 10px solid gold;
 }
+
 </style>
