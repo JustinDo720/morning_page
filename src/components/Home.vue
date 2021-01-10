@@ -236,7 +236,7 @@
             edit
           </i>
         </button>
-        <modal_test v-if='edit_weather'>
+        <modal_test v-if='edit_weather' :active-modal=true>
           <template v-slot:weather>
             <input placeholder='Enter your location here'>
           </template>
