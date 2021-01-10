@@ -4,7 +4,6 @@
       <!-- Header -->
       <div class='flex items-center justify-between'>
         <span>Modal Title</span>
-        {{ app_name }}
         <hr>
       </div>
       <!-- Body -->
@@ -16,32 +15,25 @@
       <!-- Footer -->
       <div>
         <div>
-          <button @click='this.visibileModal=false'>
+          <button @click='toggleModal'>
             close
           </button>
         </div>
       </div>
     </div>
   </div>
-  <button @click='visibileModal = !visibileModal'>
-    Test
-  </button>
-  <h1>
-    {{ app_name }}
-  </h1>
 </template>
 <script>
 export default{
   name: 'Modal',
   props: {
-    app_name:{
-      required: true,
-      type: String,
+    activeModal:{ required: true,
+      type: Boolean,
     }
   },
   data(){
     return{
-      visibileModal: false,
+      visibileModal: this.activeModal,
     }
   },
   methods:{
@@ -49,9 +41,6 @@ export default{
       this.visibileModal = !this.visibileModal
     }
   },
-  created(){
-    console.log(this.app_name)
-  }
 }
 </script>
 <style scoped>
