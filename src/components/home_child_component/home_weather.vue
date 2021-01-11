@@ -1,6 +1,6 @@
 <template>
   <h3>
-    {{ location_name }} <a><i class="material-icons">edit</i></a>
+    {{ location_name }}
   </h3>
   <h4>
     {{ temp }}
@@ -8,7 +8,7 @@
   <h5>
     {{ description }}
   </h5>
-  <button class='red btn-floating' @click='edit_weather = !edit_weather'>
+  <button class='red btn-floating' @click='edit_weather = !edit_weather' v-if='isSignedIn'>
     <i class='material-icons'>
       edit
     </i>
@@ -34,11 +34,24 @@
       </div>
     </template>
   </modal_test>
+  <button class='btn-small waves-effect green white-text' v-if='!isSignedIn' @click='redirectLogin'>
+    Change Your City
+  </button>
 </template>
 <script>
 import axios from "axios";
+import Modal from '@/components/utilities/Modal'
+import firebaseApp from '@/components/db'
 
 export default {
+  components:{
+    modal_test: Modal
+  },
+  props:{
+    signedIn:{
+      type: Boolean
+    }
+  },
   data() {
     return {
       title: "Home Weather",
@@ -46,28 +59,35 @@ export default {
       location_name: "",
       description: "",
       edit_weather: false,
-      city: ''
+      city: '',
+      isSignedIn: this.signedIn
     };
   },
   methods:{
-    enterCity: function(){
-      console.log(this.city)
+    async enterCity() {
+      let auth_user = firebaseApp.auth().currentUser.uid
+      console.log(auth_user)
+      let user_fb = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${auth_user}/weather.json`
+      await axios.post(user_fb, this.city).then(obj => {console.log(obj.data)})
+    },
+    redirectLogin: function(){
+      this.$router.push('/login')
     }
   },
   created() {
-    const info = {
-      API_key: process.env.VUE_APP_OWM_API_KEY,
-      city_name: "London"
-    };
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${info.city_name}&appid=${info.API_key}`;
-    axios.get(url).then(obj => {
-      console.log(obj.data);
-      this.location_name = obj.data.name;
-      this.description = obj.data.weather[0].main;
-      let f_temp = (obj.data.main.temp - 273.15) * 1.8 + 32;
-      this.temp = `${Math.round(f_temp)}°F`;
-      console.log(this.temp);
-    });
+    // const info = {
+    //   API_key: process.env.VUE_APP_OWM_API_KEY,
+    //   city_name: "London"
+    // };
+    // const url = `https://api.openweathermap.org/data/2.5/weather?q=${info.city_name}&appid=${info.API_key}`;
+    // axios.get(url).then(obj => {
+    //   console.log(obj.data);
+    //   this.location_name = obj.data.name;
+    //   this.description = obj.data.weather[0].main;
+    //   let f_temp = (obj.data.main.temp - 273.15) * 1.8 + 32;
+    //   this.temp = `${Math.round(f_temp)}°F`;
+    //   console.log(this.temp);
+    // });
   }
 };
 </script>

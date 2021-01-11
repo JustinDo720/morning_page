@@ -227,36 +227,7 @@
         <h4>
           {{ r2l_title }}
         </h4>
-        <h3>London</h3>
-        <h4>34°F</h4>
-        <h5>Clouds</h5>
-        <!--<home_weather></home_weather>-->
-        <button class='red btn-floating' @click='edit_weather = !edit_weather'>
-          <i class='material-icons'>
-            edit
-          </i>
-        </button>
-        <modal_test v-if='edit_weather' :active-modal=true comp-name='weather'>
-          <template v-slot:weather>
-            <!-- Body -->
-            <div class='input-field'>
-              <input
-                  id='location'
-                  type='text'
-                  class='validate black-text'
-                  v-model='city'
-                  style='width: 300px;'
-                  placeholder='Enter your city here'
-                  @keyup.enter='enterCity'>
-            </div>
-            <!-- Footer -->
-            <div >
-              <button class='btn-small green white-text' style='margin-bottom: 10px;' @click='enterCity'>
-                Enter
-              </button>
-            </div>
-          </template>
-        </modal_test>
+        <home_weather :signedIn='signedIn'></home_weather>
       </div>
     </div>
   </div>
@@ -266,17 +237,19 @@
 import home_todo from "@/components/home_child_component/home_todo";
 //import home_news from "@/components/home_child_component/home_news";
 //import home_quote_of_day from "@/components/home_child_component/home_quote_of_day";
-//import home_weather from "@/components/home_child_component/home_weather";
-import Modal from '@/components/utilities/Modal.vue';
+import home_weather from "@/components/home_child_component/home_weather";
+//import Modal from '@/components/utilities/Modal.vue';
+import firebaseApp from "@/components/db";
+import axios from "axios";
 
 export default {
   name: "home_page",
   components: {
     home_todo,
-    modal_test: Modal,
+    //modal_test: Modal,
     //home_quote_of_day,
     //home_news,
-    //home_weather,
+    home_weather,
   },
   data() {
     return {
@@ -286,12 +259,25 @@ export default {
       r2l_title: "Weather", //* row 2 left title
       todo: [],
       edit_weather: false,
-      city: ''
+      city: '',
+      signedIn: false,
     };
   },
   methods:{
     enterCity: function(){
       console.log(this.city)
+    }
+  },
+  created(){
+    try {
+      let auth_user = firebaseApp.auth().currentUser.uid;
+      // If auth_user is not null then the user is signed in.
+      this.signedIn = true;
+      console.log('Logged')
+    } catch (err) {
+      // If auth_user does not exist then the user is not signed in
+      this.signedIn = false;
+      console.log('Not Logged')
     }
   }
 
