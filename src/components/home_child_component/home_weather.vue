@@ -8,18 +8,32 @@
   <h5>
     {{ description }}
   </h5>
-  <div>
-    <ul>
-      <li class="right">
-        <a href="#" class="btn-floating red"
-          ><i class="material-icons">edit</i></a
-        >
-        <a href="#changeLocation" class="right btn-floating red modal-trigger">
-          <i class="material-icons">edit</i>
-        </a>
-      </li>
-    </ul>
-  </div>
+  <button class='red btn-floating' @click='edit_weather = !edit_weather'>
+    <i class='material-icons'>
+      edit
+    </i>
+  </button>
+  <modal_test v-if='edit_weather' :active-modal=true comp-name='weather'>
+    <template v-slot:weather>
+      <!-- Body -->
+      <div class='input-field'>
+        <input
+            id='location'
+            type='text'
+            class='validate black-text'
+            v-model='city'
+            style='width: 300px;'
+            placeholder='Enter your city here'
+            @keyup.enter='enterCity'>
+      </div>
+      <!-- Footer -->
+      <div >
+        <button class='btn-small green white-text' style='margin-bottom: 10px;' @click='enterCity'>
+          Enter
+        </button>
+      </div>
+    </template>
+  </modal_test>
 </template>
 <script>
 import axios from "axios";
@@ -30,8 +44,15 @@ export default {
       title: "Home Weather",
       temp: "",
       location_name: "",
-      description: ""
+      description: "",
+      edit_weather: false,
+      city: ''
     };
+  },
+  methods:{
+    enterCity: function(){
+      console.log(this.city)
+    }
   },
   created() {
     const info = {

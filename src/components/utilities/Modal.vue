@@ -1,24 +1,22 @@
 <template>
   <div class='overlay' v-if='visibileModal'>
-    <div class='modal_item white'>
-      <!-- Header -->
-      <div class='flex items-center justify-between'>
-        <span>Modal Title</span>
-        <hr>
+    <div id='weather_modal' class='modal_item white' v-if='currentCompName === "weather"'>
+      <div class='right'>
+        <button class='btn-small red black-text' @click='removeModal'>
+          <i class='material-icons'>
+            clear
+          </i>
+        </button>
       </div>
-      <!-- Body -->
-      <div>
-        <div>
-          <slot name='weather'></slot>
-        </div>
+      <div class='justify-center'>
+        <h4>
+          Weather
+        </h4>
       </div>
-      <!-- Footer -->
+      <hr style='margin-top: 20px;'>
+      <!-- Slots -->
       <div>
-        <div>
-          <button @click='toggleModal'>
-            close
-          </button>
-        </div>
+        <slot name='weather'></slot>
       </div>
     </div>
   </div>
@@ -27,19 +25,31 @@
 export default{
   name: 'Modal',
   props: {
-    activeModal:{ required: true,
+    // We are going to use activeModal to control the Modal using v-if
+    activeModal:{
+      required: true,
       type: Boolean,
+    },
+    // The comp name will allow us to reuse this component. For example, we are going to use this for weather and login
+    compName:{
+      required: true,
+      type: String,
     }
   },
   data(){
     return{
       visibileModal: this.activeModal,
+      currentCompName: this.compName,
     }
   },
   methods:{
-    toggleModal: function(){
-      this.visibileModal = !this.visibileModal
+    removeModal: function(){
+      this.visibileModal = false
+      document.body.style.overflow = ''
     }
+  },
+  beforeCreate(){
+    document.body.style.overflow = 'hidden'
   },
 }
 </script>
@@ -55,6 +65,8 @@ export default{
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow-x: hidden;
+  overflow-y: hidden
 }
 
 .modal_item{
@@ -62,4 +74,5 @@ export default{
   box-shadow: 1px 2px 4px rgba(153,155,168, 0.12);
   border-raidus: 4px;
 }
+
 </style>
