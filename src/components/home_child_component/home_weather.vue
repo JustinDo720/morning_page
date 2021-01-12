@@ -13,7 +13,7 @@
       edit
     </i>
   </button>
-  <modal_test v-if='edit_weather' :active-modal=true comp-name='weather'>
+  <modal_test v-if='edit_weather' :active-modal=activateModal comp-name='weather'>
     <template v-slot:weather>
       <!-- Body -->
       <div class='input-field'>
@@ -25,6 +25,7 @@
             style='width: 300px;'
             placeholder='Enter your city here'
             @keyup.enter='enterCity'>
+
       </div>
       <!-- Footer -->
       <div >
@@ -60,7 +61,8 @@ export default {
       description: "",
       edit_weather: false,
       city: '',
-      isSignedIn: this.signedIn
+      isSignedIn: this.signedIn,
+      activateModal: true,
     };
   },
   methods:{
@@ -68,7 +70,9 @@ export default {
       let auth_user = firebaseApp.auth().currentUser.uid
       console.log(auth_user)
       let user_fb = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${auth_user}/weather.json`
-      await axios.post(user_fb, this.city).then(obj => {console.log(obj.data)})
+      await axios.post(user_fb, {'city': this.city}).then(obj => {console.log(obj.data)})
+      this.edit_weather = false
+      document.body.style.overflow = ''
     },
     redirectLogin: function(){
       this.$router.push('/login')
