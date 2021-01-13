@@ -2,7 +2,7 @@
   <div id="app">
     <!-- With :key='$route.fullPath' we will see any change which will trigger a reload-->
     <navigation :key="$route.fullPath"></navigation>
-    <router-view></router-view>
+    <router-view :key="$route.fullPath"></router-view>
   </div>
 </template>
 
