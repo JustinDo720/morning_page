@@ -25,7 +25,6 @@
             style='width: 300px;'
             placeholder='Enter your city here'
             @keyup.enter='enterCity'>
-
       </div>
       <!-- Footer -->
       <div >
@@ -63,14 +62,60 @@ export default {
       city: '',
       isSignedIn: this.signedIn,
       activateModal: true,
+      city_from_fb: null // we will use this to determine if the user will post or update their city name
     };
   },
   methods:{
-    async enterCity() {
+    initalizeSetup(){
+      // Reset the input field
+      this.city = ''
+      // By default, the city name will be London unless the user is signed in so lets check for that
+      const info = {
+        API_key: process.env.VUE_APP_OWM_API_KEY,
+        city_name: "London"
+      }
+      if (firebaseApp.auth().currentUser){
+        let auth_user = firebaseApp.auth().currentUser.uid
+        let user_fb = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${auth_user}/weather.json`
+        axios.get(user_fb).then(obj => {
+          if(obj.data === null ){
+            // If the obj.data is null then this is a first time user which will require a post request
+            this.city_from_fb = {'city_name': '', 'city_id': null}
+          }else{
+            // If the city exist then we want to update it instead of posting another one a cloud our database
+            for(let fb_id in obj.data){
+              this.city_from_fb = {'city_name':obj.data[fb_id].city, 'city_id': fb_id}
+            }
+          }
+
+          console.log(this.city_from_fb['city_name'], this.city_from_fb['city_id'])
+        })
+      }
+      // const url = `https://api.openweathermap.org/data/2.5/weather?q=${info.city_name}&appid=${info.API_key}`;
+      // axios.get(url).then(obj => {
+      //   console.log(obj.data);
+      //   this.location_name = obj.data.name;
+      //   this.description = obj.data.weather[0].main;
+      //   let f_temp = (obj.data.main.temp - 273.15) * 1.8 + 32;
+      //   this.temp = `${Math.round(f_temp)}°F`;
+      //   console.log(this.temp);
+      // });
+    },
+    enterCity() {
       let auth_user = firebaseApp.auth().currentUser.uid
       console.log(auth_user)
       let user_fb = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${auth_user}/weather.json`
-      await axios.post(user_fb, {'city': this.city}).then(obj => {console.log(obj.data)})
+      // If this var was updated by our GET request then we will put instead of post so we could keep only ONE city key
+      if(this.city_from_fb['city_name'] === ''){
+        axios.post(user_fb, {'city': this.city}).then(obj => {console.log('I posted')})
+        this.initalizeSetup()
+      }else{
+        let user_fb = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${auth_user}/weather/${this.city_from_fb['city_id']}.json`
+        console.log(user_fb)
+        axios.put(user_fb, {'city': this.city}).then(obj => {console.log('I Updated')})
+        this.initalizeSetup()
+
+      }
       this.edit_weather = false
       document.body.style.overflow = ''
     },
@@ -79,19 +124,7 @@ export default {
     }
   },
   created() {
-    // const info = {
-    //   API_key: process.env.VUE_APP_OWM_API_KEY,
-    //   city_name: "London"
-    // };
-    // const url = `https://api.openweathermap.org/data/2.5/weather?q=${info.city_name}&appid=${info.API_key}`;
-    // axios.get(url).then(obj => {
-    //   console.log(obj.data);
-    //   this.location_name = obj.data.name;
-    //   this.description = obj.data.weather[0].main;
-    //   let f_temp = (obj.data.main.temp - 273.15) * 1.8 + 32;
-    //   this.temp = `${Math.round(f_temp)}°F`;
-    //   console.log(this.temp);
-    // });
+      this.initalizeSetup();
   }
 };
 </script>
