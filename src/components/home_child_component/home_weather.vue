@@ -1,4 +1,4 @@
-<template>
+<template :key='city_from_fb'>
   <h3>
     {{ location_name }}
   </h3>
@@ -8,6 +8,10 @@
   <h5>
     {{ description }}
   </h5>
+  <h3 v-if='city_from_fb'>
+    {{ city_from_fb['city_name'] }}
+  </h3>
+
   <button class='red btn-floating' @click='edit_weather = !edit_weather' v-if='isSignedIn'>
     <i class='material-icons'>
       edit
@@ -66,7 +70,8 @@ export default {
     };
   },
   methods:{
-    initalizeSetup(){
+    initalizeSetup(preferred_city = null){
+      console.log(preferred_city)
       // Reset the input field
       this.city = ''
       // By default, the city name will be London unless the user is signed in so lets check for that
@@ -108,14 +113,17 @@ export default {
       // If this var was updated by our GET request then we will put instead of post so we could keep only ONE city key
       if(this.city_from_fb['city_name'] === ''){
         axios.post(user_fb, {'city': this.city}).then(obj => {console.log('I posted')})
-        this.initalizeSetup()
       }else{
         let user_fb = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${auth_user}/weather/${this.city_from_fb['city_id']}.json`
         console.log(user_fb)
-        axios.put(user_fb, {'city': this.city}).then(obj => {console.log('I Updated')})
-        this.initalizeSetup()
-
+        axios.put(user_fb, {'city': this.city}).then(obj => {
+          console.log('I Updated')
+          this.city_from_fb['city_name'] = obj.data.city
+          console.log(this.city_from_fb)
+        })
       }
+
+      this.initalizeSetup(this.city_from_fb)
       this.edit_weather = false
       document.body.style.overflow = ''
     },
