@@ -64,6 +64,7 @@ export default {
       description: "",
       edit_weather: false,
       city: '',
+      default_city: 'London',
       isSignedIn: this.signedIn,
       activateModal: true,
       city_from_fb: null // we will use this to determine if the user will post or update their city name
@@ -79,7 +80,9 @@ export default {
         API_key: process.env.VUE_APP_OWM_API_KEY,
         city_name: "London"
       }
+
       if (firebaseApp.auth().currentUser){
+        info['city_name'] = this.city_from_fb
         let auth_user = firebaseApp.auth().currentUser.uid
         let user_fb = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${auth_user}/weather.json`
         axios.get(user_fb).then(obj => {
@@ -92,19 +95,18 @@ export default {
               this.city_from_fb = {'city_name':obj.data[fb_id].city, 'city_id': fb_id}
             }
           }
-
           console.log(this.city_from_fb['city_name'], this.city_from_fb['city_id'])
         })
       }
-      // const url = `https://api.openweathermap.org/data/2.5/weather?q=${info.city_name}&appid=${info.API_key}`;
-      // axios.get(url).then(obj => {
-      //   console.log(obj.data);
-      //   this.location_name = obj.data.name;
-      //   this.description = obj.data.weather[0].main;
-      //   let f_temp = (obj.data.main.temp - 273.15) * 1.8 + 32;
-      //   this.temp = `${Math.round(f_temp)}°F`;
-      //   console.log(this.temp);
-      // });
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${info.city_name}&appid=${info.API_key}`;
+      axios.get(url).then(obj => {
+        console.log(obj.data);
+        this.location_name = obj.data.name;
+        this.description = obj.data.weather[0].main;
+        let f_temp = (obj.data.main.temp - 273.15) * 1.8 + 32;
+        this.temp = `${Math.round(f_temp)}°F`;
+        console.log(this.temp);
+      });
     },
     enterCity() {
       let auth_user = firebaseApp.auth().currentUser.uid
