@@ -8,9 +8,6 @@
   <h5>
     {{ description }}
   </h5>
-  <h3 v-if='city_from_fb'>
-    {{ city_from_fb['city_name'] }}
-  </h3>
 
   <button class='red btn-floating' @click='edit_weather = !edit_weather' v-if='isSignedIn'>
     <i class='material-icons'>
@@ -41,6 +38,9 @@
   <button class='btn-small waves-effect green white-text' v-if='!isSignedIn' @click='redirectLogin'>
     Change Your City
   </button>
+  <h1 v-if='city_from_fb'>
+    {{ city_from_fb['city_name']}}
+  </h1>
 </template>
 <script>
 import axios from "axios";
@@ -67,38 +67,41 @@ export default {
       default_city: 'London',
       isSignedIn: this.signedIn,
       activateModal: true,
-      city_from_fb: null // we will use this to determine if the user will post or update their city name
+      city_from_fb: null, // we will use this to determine if the user will post or update their city name
+      info : {
+        API_key: process.env.VUE_APP_OWM_API_KEY,
+        city_name: "London"
+      } // By default, the city name will be London unless the user is signed in so lets check for that
+
     };
   },
   methods:{
-    initalizeSetup(preferred_city = null){
+    // We have to make this an async task because we want to update info based on our GET request
+     async initalizeSetup(preferred_city){
       console.log(preferred_city)
       // Reset the input field
       this.city = ''
-      // By default, the city name will be London unless the user is signed in so lets check for that
-      const info = {
-        API_key: process.env.VUE_APP_OWM_API_KEY,
-        city_name: "London"
-      }
 
       if (firebaseApp.auth().currentUser){
-        info['city_name'] = this.city_from_fb
         let auth_user = firebaseApp.auth().currentUser.uid
         let user_fb = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${auth_user}/weather.json`
-        axios.get(user_fb).then(obj => {
-          if(obj.data === null ){
-            // If the obj.data is null then this is a first time user which will require a post request
-            this.city_from_fb = {'city_name': '', 'city_id': null}
-          }else{
-            // If the city exist then we want to update it instead of posting another one a cloud our database
-            for(let fb_id in obj.data){
-              this.city_from_fb = {'city_name':obj.data[fb_id].city, 'city_id': fb_id}
+        await axios.get(user_fb).then(obj => {
+            if(obj.data === null ){
+              // If the obj.data is null then this is a first time user which will require a post request
+              this.city_from_fb = {'city_name': '', 'city_id': null}
+            }else{
+              // If the city exist then we want to update it instead of posting another one a cloud our database
+              for(let fb_id in obj.data){
+                this.city_from_fb = {'city_name':obj.data[fb_id].city, 'city_id': fb_id}
+              }
             }
-          }
-          console.log(this.city_from_fb['city_name'], this.city_from_fb['city_id'])
-        })
-      }
-      const url = `https://api.openweathermap.org/data/2.5/weather?q=${info.city_name}&appid=${info.API_key}`;
+
+            console.log(this.city_from_fb['city_name'], this.city_from_fb['city_id'])
+            console.log(this.info)
+          })
+        }
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${this.info.city_name}&appid=${this.info.API_key}`;
+      console.log(url)
       axios.get(url).then(obj => {
         console.log(obj.data);
         this.location_name = obj.data.name;
@@ -121,6 +124,8 @@ export default {
         axios.put(user_fb, {'city': this.city}).then(obj => {
           console.log('I Updated')
           this.city_from_fb['city_name'] = obj.data.city
+          // Once the GET request is complete we want to set info's city name to what we got from firebase
+          this.info['city_name'] = this.city_from_fb['city_name']
           console.log(this.city_from_fb)
         })
       }
@@ -134,7 +139,8 @@ export default {
     }
   },
   created() {
-      this.initalizeSetup();
+
+      this.initalizeSetup(null);
   }
-};
+};1
 </script>
