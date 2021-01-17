@@ -224,9 +224,12 @@
       </div>
     </div>
 
-    <div class="weather card" :class='temp_controller'>
+    <div class="weather card" :class="temp_controller">
       <div class="card-content">
-        <home_weather :signedIn='signedIn' @temp='changeTempBG($event)'></home_weather>
+        <home_weather
+          :signedIn="signedIn"
+          @temp="changeTempBG($event)"
+        ></home_weather>
       </div>
     </div>
   </div>
@@ -248,7 +251,7 @@ export default {
     //modal_test: Modal,
     //home_quote_of_day,
     //home_news,
-    home_weather,
+    home_weather
   },
   data() {
     return {
@@ -258,30 +261,27 @@ export default {
       r2l_title: "Weather", //* row 2 left title
       todo: [],
       edit_weather: false,
-      city: '',
+      city: "",
       signedIn: false,
       temp_controller: null // We are going to use this for dynamic css
     };
   },
-  methods:{
-    changeTempBG: function(background_temp){
-      this.temp_controller = background_temp
-      console.log(this.temp_controller, background_temp)
+  methods: {
+    changeTempBG: function(background_temp) {
+      this.temp_controller = background_temp;
+      console.log(this.temp_controller, background_temp);
     }
   },
-  created(){
+  created() {
     try {
       let auth_user = firebaseApp.auth().currentUser.uid;
       // If auth_user is not null then the user is signed in.
       this.signedIn = true;
-      console.log('Logged')
     } catch (err) {
       // If auth_user does not exist then the user is not signed in
       this.signedIn = false;
-      console.log('Not Logged')
     }
   }
-
 };
 </script>
 
@@ -322,14 +322,14 @@ export default {
   grid-row-end: 3;
   height: 400px;
 }
-.hot{
-  background-image: url('../assets/hot_day.jpg');
+.hot {
+  background-image: url("../assets/hot_day.jpg");
 }
-.warm{
-  background-image: url('../assets/warm_day.jpg');
+.warm {
+  background-image: url("../assets/warm_day.jpg");
 }
-.cold{
-  background-image: url('../assets/cold_night.jpg');
+.cold {
+  background-image: url("../assets/cold_night.jpg");
 }
 
 /* News */
@@ -350,5 +350,4 @@ export default {
 .gold-border {
   border: 10px solid gold;
 }
-
 </style>

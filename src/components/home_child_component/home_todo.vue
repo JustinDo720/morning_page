@@ -13,6 +13,20 @@
         </i>
         Search For Your Todos
       </label>
+      <button
+        class="btn-small waves-effect waves-light green white-text"
+        @click.prevent="add_todo_mode = !add_todo_mode"
+      >
+        <i class="material-icons">add</i> Add Todo
+      </button>
+      <modal_todo
+        v-if="add_todo_mode"
+        :active-modal="activateModal"
+        comp-name="todo"
+      >
+        <template v-slot:todo>
+        </template>
+      </modal_todo>
     </div>
     <div v-else>
       <button @click="redirect_to_login" class="btn waves-effect waves-light">
@@ -40,15 +54,21 @@
 <script>
 import axios from "axios";
 import firebaseApp from "@/components/db";
+import Modal from "@/components/utilities/Modal";
 
 export default {
   name: "home_todo",
+  components: {
+    modal_todo: Modal,
+  },
   data() {
     return {
       title: "Home Todo",
       searchTodo: "",
       fetched_todos: [], // In progress todos or the ones that are neutral
-      signedIn: false // We are going to use this to show the user's items or show the login button
+      signedIn: false, // We are going to use this to show the user's items or show the login button
+      add_todo_mode: false,
+      activateModal: true
     };
   },
   created() {
@@ -83,7 +103,7 @@ export default {
   },
   methods: {
     updateStatus(todo_id, mode) {
-      let auth_user = firebaseApp.auth().currentUser.uid
+      let auth_user = firebaseApp.auth().currentUser.uid;
       let task_at_hand = this.fetched_todos[todo_id];
       if (mode === "completed") {
         const USER_FIREBASE_URL = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${auth_user}/todo/${task_at_hand.todo_id}.json`;
