@@ -1,5 +1,7 @@
 <template>
   <div id="app-container" class="grid-container">
+    <navigation :key="$route.fullPath"></navigation>
+    <router-view :key="$route.fullPath"></router-view>
     <div class="quote-of-day card grey darken-3 gold-border">
       <div class="card-content">
         <h4>
@@ -222,12 +224,12 @@
       </div>
     </div>
 
-    <div class="weather card">
+    <div class="weather card" :class="temp_controller">
       <div class="card-content">
-        <h4>
-          {{ r2l_title }}
-        </h4>
-        <home_weather :signedIn='signedIn'></home_weather>
+        <home_weather
+          :signedIn="signedIn"
+          @temp="changeTempBG($event)"
+        ></home_weather>
       </div>
     </div>
   </div>
@@ -249,7 +251,7 @@ export default {
     //modal_test: Modal,
     //home_quote_of_day,
     //home_news,
-    home_weather,
+    home_weather
   },
   data() {
     return {
@@ -259,28 +261,27 @@ export default {
       r2l_title: "Weather", //* row 2 left title
       todo: [],
       edit_weather: false,
-      city: '',
+      city: "",
       signedIn: false,
+      temp_controller: null // We are going to use this for dynamic css
     };
   },
-  methods:{
-    enterCity: function(){
-      console.log(this.city)
+  methods: {
+    changeTempBG: function(background_temp) {
+      this.temp_controller = background_temp;
+      console.log(this.temp_controller, background_temp);
     }
   },
-  created(){
+  created() {
     try {
       let auth_user = firebaseApp.auth().currentUser.uid;
       // If auth_user is not null then the user is signed in.
       this.signedIn = true;
-      console.log('Logged')
     } catch (err) {
       // If auth_user does not exist then the user is not signed in
       this.signedIn = false;
-      console.log('Not Logged')
     }
   }
-
 };
 </script>
 
@@ -297,13 +298,11 @@ export default {
   margin-left: 5px;
 }
 .grid-container > div {
-  background: cadetblue;
   text-align: center;
   overflow: hidden;
 }
 .grid-container > div:nth-child(odd) {
   /* > means for every div tag and here :nth-child just alternates */
-  background: cornflowerblue;
   text-align: center;
 }
 
@@ -321,7 +320,16 @@ export default {
   grid-column-start: 1;
   grid-row-start: 2;
   grid-row-end: 3;
-  height: 330px;
+  height: 400px;
+}
+.hot {
+  background-image: url("../assets/hot_day.jpg");
+}
+.warm {
+  background-image: url("../assets/warm_day.jpg");
+}
+.cold {
+  background-image: url("../assets/cold_night.jpg");
 }
 
 /* News */
@@ -342,5 +350,4 @@ export default {
 .gold-border {
   border: 10px solid gold;
 }
-
 </style>

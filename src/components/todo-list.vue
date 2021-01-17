@@ -99,7 +99,7 @@
       <button v-else @click="view_completed_mode = !view_completed_mode">
         View To-Do List
       </button>
-      <button @click="firebase_db">Test</button>
+      <button @click.prevent="firebase_db">Test</button>
     </div>
   </div>
 </template>

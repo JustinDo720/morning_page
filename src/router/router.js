@@ -4,7 +4,7 @@ import todo from "@/components/todo-list";
 import login from "@/components/login.vue";
 import register from "@/components/register.vue";
 import firebaseApp from "@/components/db";
-import Modal from '@/components/utilities/Modal'
+import Modal from "@/components/utilities/Modal";
 
 let history = createWebHistory();
 let routes = [
@@ -12,7 +12,7 @@ let routes = [
   { path: "/todo", component: todo, meta: { requiresAuth: true } }, // requiresAuth acts like a guard
   { path: "/login", component: login, meta: { requiresGuest: true } },
   { path: "/register", component: register, meta: { requiresGuest: true } },
-  {path:'/test_modal',component: Modal}
+  { path: "/test_modal", component: Modal }
 ];
 
 const router = createRouter({
