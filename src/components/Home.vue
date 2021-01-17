@@ -222,12 +222,12 @@
       </div>
     </div>
 
-    <div class="weather card">
+    <div class="weather card" :class='temp_controller'>
       <div class="card-content">
         <h4>
           {{ r2l_title }}
         </h4>
-        <home_weather :signedIn='signedIn'></home_weather>
+        <home_weather :signedIn='signedIn' @temp='changeTempBG($event)'></home_weather>
       </div>
     </div>
   </div>
@@ -261,11 +261,13 @@ export default {
       edit_weather: false,
       city: '',
       signedIn: false,
+      temp_controller: null // We are going to use this for dynamic css
     };
   },
   methods:{
-    enterCity: function(){
-      console.log(this.city)
+    changeTempBG: function(background_temp){
+      this.temp_controller = background_temp
+      console.log(this.temp_controller, background_temp)
     }
   },
   created(){
@@ -297,13 +299,11 @@ export default {
   margin-left: 5px;
 }
 .grid-container > div {
-  background: cadetblue;
   text-align: center;
   overflow: hidden;
 }
 .grid-container > div:nth-child(odd) {
   /* > means for every div tag and here :nth-child just alternates */
-  background: cornflowerblue;
   text-align: center;
 }
 
@@ -321,7 +321,16 @@ export default {
   grid-column-start: 1;
   grid-row-start: 2;
   grid-row-end: 3;
-  height: 330px;
+  height: 500px;
+}
+.hot{
+  background-color: darkred;
+}
+.warm{
+  background-color: orangered;
+}
+.cold{
+  background-color: dodgerblue;
 }
 
 /* News */
