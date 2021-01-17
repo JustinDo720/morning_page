@@ -1,47 +1,53 @@
 <template :key='city_from_fb'>
   <div id='weather_app'>
     <div id='display_info'>
-      <h3>
-        {{ location_name }}
-      </h3>
-      <h4>
-        {{ temp }}
-      </h4>
-      <h5>
-        {{ description }}
-      </h5>
+      <div id='place'>
+        <h4 class='white-text desc-text'>
+          {{ location_name }}
+        </h4>
+      </div>
+      <div id='temp' class='display-temp'>
+        <h2>
+          {{ temp }}
+        </h2>
+      </div>
+      <div id='desc'>
+        <h4 class='white-text desc-text'>
+          {{ description }}
+        </h4>
+      </div>
     </div>
-    <div id='modal_controller'>
-      <button class='red btn-floating' @click='edit_weather = !edit_weather' v-if='isSignedIn'>
-        <i class='material-icons'>
-          edit
-        </i>
-      </button>
-      <modal_test v-if='edit_weather' :active-modal=activateModal comp-name='weather'>
-        <template v-slot:weather>
-          <!-- Body -->
-          <div class='input-field'>
-            <input
-                id='location'
-                type='text'
-                class='validate black-text'
-                v-model='city'
-                style='width: 300px;'
-                placeholder='Enter your city here'
-                @keyup.enter='enterCity'>
-          </div>
-          <!-- Footer -->
-          <div >
-            <button class='btn-small green white-text' style='margin-bottom: 10px;' @click='enterCity'>
-              Enter
-            </button>
-          </div>
-        </template>
-      </modal_test>
-      <button class='btn-small waves-effect green white-text' v-if='!isSignedIn' @click='redirectLogin'>
-        Change Your City
-      </button>
-    </div>
+  </div>
+  <div id='modal_controller'>
+    <button class='red btn-floating' @click='edit_weather = !edit_weather' v-if='isSignedIn'>
+      <i class='material-icons'>
+        edit
+      </i>
+    </button>
+    <modal_test v-if='edit_weather' :active-modal=activateModal comp-name='weather'>
+      <template v-slot:weather>
+        <!-- Body -->
+        <div class='input-field'>
+          <input
+              id='location'
+              type='text'
+              class='validate black-text'
+              v-model='city'
+              style='width: 300px;'
+              placeholder='Enter your city here'
+              @keyup.enter='enterCity'>
+        </div>
+        <!-- Footer -->
+        <div >
+          <button class='btn-small green white-text' style='margin-bottom: 10px;' @click='enterCity'>
+            Enter
+          </button>
+        </div>
+      </template>
+    </modal_test>
+    <button class='btn-small waves-effect green white-text' v-if='!isSignedIn' @click='redirectLogin'>
+      Change Your City
+    </button>
   </div>
 
 </template>
@@ -108,12 +114,15 @@ export default {
 
       const url = `https://api.openweathermap.org/data/2.5/weather?q=${this.info.city_name}&appid=${this.info.API_key}`;
       // axios.get(url).then(obj => {
+      //   console.log(obj.data)
       //   this.location_name = obj.data.name;
       //   this.description = obj.data.weather[0].main;
       //   let f_temp = Math.round((obj.data.main.temp - 273.15) * 1.8 + 32);
-      //   if(f_temp > 80){
+      //   // Testing Temp for testing the background of each temp
+      //   let testing_temp = 90
+      //   if(f_temp > 70){
       //     this.temp_controller = 'hot'
-      //   }else if(f_temp < 40){
+      //   }else if(f_temp < 50){
       //     this.temp_controller = 'cold'
       //   }else{
       //     this.temp_controller = 'warm'
@@ -154,3 +163,21 @@ export default {
   }
 };
 </script>
+<style scoped>
+.display-temp{
+  background-color: rgba(255,255,255,0.3);
+  width: 150px;
+  height: 70px;
+  margin: 0 auto;
+  box-shadow: 3px 6px rgba(0, 0, 0, 0.25);
+  border-radius: 16px;
+}
+.desc-text{
+  font-family:  'montserrat', sans-serif;
+  font-weight: 700;
+  font-style: italic;
+  text-shadow: 3px 6px rgba(0, 0, 0, 0.25);
+}
+</style>
+
+

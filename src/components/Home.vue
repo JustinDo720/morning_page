@@ -1,5 +1,7 @@
 <template>
   <div id="app-container" class="grid-container">
+    <navigation :key="$route.fullPath"></navigation>
+    <router-view :key="$route.fullPath"></router-view>
     <div class="quote-of-day card grey darken-3 gold-border">
       <div class="card-content">
         <h4>
@@ -224,9 +226,6 @@
 
     <div class="weather card" :class='temp_controller'>
       <div class="card-content">
-        <h4>
-          {{ r2l_title }}
-        </h4>
         <home_weather :signedIn='signedIn' @temp='changeTempBG($event)'></home_weather>
       </div>
     </div>
@@ -321,16 +320,16 @@ export default {
   grid-column-start: 1;
   grid-row-start: 2;
   grid-row-end: 3;
-  height: 500px;
+  height: 400px;
 }
 .hot{
-  background-color: darkred;
+  background-image: url('../assets/hot_day.jpg');
 }
 .warm{
-  background-color: orangered;
+  background-image: url('../assets/warm_day.jpg');
 }
 .cold{
-  background-color: dodgerblue;
+  background-image: url('../assets/cold_night.jpg');
 }
 
 /* News */
