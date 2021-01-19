@@ -1,9 +1,9 @@
 <template>
   <div id="todo-container">
-    <div class="todo-list display-todo" v-if="!view_completed_mode">
-      <h2 class="display-todo-empty" v-if="todo_list.length === 0">
+    <div class="todo-list display-todo">
+      <h4 class="display-todo-empty" v-if="todo_list.length === 0">
         You have not added any Todo items yet.
-      </h2>
+      </h4>
       <!-- Setting task_done and using the var right on v-for actually works -->
       <div
         id="individual-task"
@@ -18,26 +18,24 @@
         <div>
           <ul>
             <li>
-              <h2>
+              <h4>
                 {{ task.todo_item }}
                 <button
                   class="deleted"
-                  @click="updateStatus(todo_id, 'deleted', 'normal_mode')"
+                  @click.prevent="deleteTodo(todo_id)"
                 >
                   &cross;
                 </button>
-                <button
-                  class="completed"
-                  @click="updateStatus(todo_id, 'completed', 'normal_mode')"
-                >
-                  &checkmark;</button
-                >&nbsp;
-              </h2>
+              </h4>
               <span>
                 {{ task.task_date }}
               </span>
             </li>
           </ul>
+        </div>
+
+        <div v-if='number_of_todo > 3'>
+          Hello
         </div>
       </div>
     </div>
@@ -47,7 +45,7 @@
         class="todo_input"
         placeholder="Add an item to your list"
         v-model="todo"
-        @keyup.enter="add_todo"
+        @keyup.enter.prevent="add_todo"
       /><br/>
     </div>
   </div>
@@ -64,10 +62,10 @@ export default {
       auth_user: firebaseApp.auth().currentUser.uid,
       todo: "",
       todo_list: [],
-      todo_completed: [],
       task_completed: false,
       task_removed: false,
       task_neutral: true,
+      number_of_todo: 0,
       months: [
         "January",
         "February",
@@ -117,69 +115,31 @@ export default {
           neutral: this.task_neutral,
           task_date: `${show_date} ${show_time}`
         };
+
         // We need to await for the post before performing a get request to get the latest things
         await axios.post(firebase_db_url, todo_info).then(obj => {
           // Next try to work with this method
           console.log("Success", obj.data.name);
           this.todo = "";
-        });
-
-        // Grab data without refreshing
-        axios.get(firebase_db_url).then(obj => {
-          console.log(obj.data);
-          let todo_info = [];
-          for (let firebase_id in obj.data) {
-            if (obj.data[firebase_id].neutral) {
-              // Basically each time we are setting a key called todo_id to a value of the firebase id
-              obj.data[firebase_id].todo_id = firebase_id;
-              todo_info.unshift(obj.data[firebase_id]);
-            }
-          }
-          this.todo_list = todo_info;
+          // We are going to add this to the list for our program to render if the item was posted
+          todo_info['todo_id'] = obj.data.name
+          this.todo_list.unshift(todo_info)
+          console.log(this.todo_list, todo_info)
+          this.number_of_todo += 1
+          console.log(this.number_of_todo)
         });
       }
     },
-    updateStatus: function(task_id, task_status, mode) {
+    deleteTodo: function(task_id) {
       let task_at_hand = this.todo_list[task_id];
-      let task_completed = this.todo_completed[task_id];
-
-      if (task_status === "completed") {
-        //* So the idea is that we set the status to true then push this item to the completed task array
-        const USER_FIREBASE_URL = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${this.auth_user}/todo/${task_at_hand.todo_id}.json`;
-        task_at_hand.completed = true;
-        task_at_hand.neutral = false;
-        task_at_hand.removed = false;
-        this.todo_completed.unshift(task_at_hand);
-        // Updates the completed, neutral, removed values in the modified todo item
-        axios.put(USER_FIREBASE_URL, task_at_hand);
-        console.log(USER_FIREBASE_URL, "I should be in this loop rn");
-        // Splice is used to delete some things in an array using the index,amount as parameter
-        this.todo_list.splice(task_id, 1);
-      } else if (task_status === "undo") {
-        //* The undo button is only for the completed view so we use todo_completed list instead
-        const USER_FIREBASE_URL = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${this.auth_user}/todo/${task_completed.todo_id}.json`;
-        task_completed.completed = false;
-        task_completed.neutral = true; // resetting the status of the task
-        task_completed.removed = false;
-        //! Note: If you unshift something keep them unshift or else the index will be messed up
-        this.todo_list.unshift(task_completed); // So if this is undo we are going to push back the item
-        axios.put(USER_FIREBASE_URL, task_completed);
-        this.todo_completed.splice(task_id, 1);
-      } else {
-        // At this point the user just wants to remove the task
-        // The idea behind this is that we use mode to see which array we need to edit
-        if (mode === "normal_mode") {
-          const USER_FIREBASE_URL = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${this.auth_user}/todo/${task_at_hand.todo_id}.json`;
-          this.todo_list.splice(task_id, 1);
-          axios.delete(USER_FIREBASE_URL);
-        } else {
-          // We are in completed_mode
-          const USER_FIREBASE_URL = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${this.auth_user}/todo/${task_completed.todo_id}.json`;
-          console.log("I should be here rn");
-          this.todo_completed.splice(task_id, 1);
-          axios.delete(USER_FIREBASE_URL);
-        }
-      }
+      console.log(task_at_hand)
+      // At this point the user just wants to remove the task
+      // The idea behind this is that we use mode to see which array we need to edit
+      const USER_FIREBASE_URL = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${this.auth_user}/todo/${task_at_hand.todo_id}.json`;
+      this.todo_list.splice(task_id, 1);
+      console.log('I should be right here')
+      axios.delete(USER_FIREBASE_URL);
+      this.number_of_todo -= 1
     }
   },
 };

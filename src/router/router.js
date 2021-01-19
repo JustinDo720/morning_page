@@ -1,6 +1,6 @@
 import { createWebHistory, createRouter } from "vue-router";
 import home_page from "@/components/Home";
-import todo from "@/components/todo-list";
+import todo from "@/components/home_child_component/add_todo";
 import login from "@/components/login.vue";
 import register from "@/components/register.vue";
 import firebaseApp from "@/components/db";

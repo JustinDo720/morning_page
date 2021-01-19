@@ -45,7 +45,7 @@
   </div>
 </template>
 <script>
-import todo_list from "@/components/todo-list"
+import todo_list from "@/components/home_child_component/add_todo"
 
 export default {
   name: "Modal",
