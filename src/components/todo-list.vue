@@ -1,13 +1,8 @@
 <template>
   <div id="todo-container">
-    <div id="todo-title">
-      <h1>
-        {{ title }}
-      </h1>
-    </div>
     <div class="todo-list display-todo" v-if="!view_completed_mode">
       <h2 class="display-todo-empty" v-if="todo_list.length === 0">
-        You Currently do not have any tasks
+        You have not added any Todo items yet.
       </h2>
       <!-- Setting task_done and using the var right on v-for actually works -->
       <div
@@ -46,42 +41,6 @@
         </div>
       </div>
     </div>
-    <div id="view-completed-todo" class="todo-list display-todo" v-else>
-      <h2 class="display-todo-empty" v-if="todo_completed.length === 0">
-        You currently have no completed tasks
-      </h2>
-      <div
-        id="individual-completed-task"
-        class="task_done"
-        v-for="(task, task_id) in todo_completed"
-        :key="task_id"
-      >
-        <div>
-          <ul>
-            <li>
-              <h2>
-                {{ task.todo_item }}
-                <button
-                  class="deleted"
-                  @click="updateStatus(task_id, 'deleted', 'completed_mode')"
-                >
-                  &cross;
-                </button>
-                <button
-                  class="neutral"
-                  @click="updateStatus(task_id, 'undo', 'completed_mode')"
-                >
-                  &#8635;
-                </button>
-              </h2>
-              <span>
-                {{ task.task_date }}
-              </span>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
     <div class="todo-list enter-todo">
       <h6 id="enter-todo-title">Add a To-Do item to your list!</h6>
       <input
@@ -89,17 +48,7 @@
         placeholder="Add an item to your list"
         v-model="todo"
         @keyup.enter="add_todo"
-      /><br />
-      <button
-        v-if="!view_completed_mode"
-        @click="view_completed_mode = !view_completed_mode"
-      >
-        View completed
-      </button>
-      <button v-else @click="view_completed_mode = !view_completed_mode">
-        View To-Do List
-      </button>
-      <button @click.prevent="firebase_db">Test</button>
+      /><br/>
     </div>
   </div>
 </template>
@@ -119,7 +68,6 @@ export default {
       task_completed: false,
       task_removed: false,
       task_neutral: true,
-      view_completed_mode: false,
       months: [
         "January",
         "February",
@@ -234,28 +182,6 @@ export default {
       }
     }
   },
-  created() {
-    let user_fb = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${this.auth_user}/todo.json`;
-    axios.get(user_fb).then(obj => {
-      let todo_info = [];
-      let todo_completed_list = [];
-      for (let firebase_id in obj.data) {
-        if (obj.data[firebase_id].neutral) {
-          // Basically each time we are setting a key called todo_id to a value of the firebase id
-          obj.data[firebase_id].todo_id = firebase_id;
-          todo_info.unshift(obj.data[firebase_id]);
-        }
-        // Refresh the page with new data which will add back on the new id
-        if (obj.data[firebase_id].completed) {
-          obj.data[firebase_id].todo_id = firebase_id;
-          todo_completed_list.unshift(obj.data[firebase_id]);
-          this.todo_completed = todo_completed_list;
-        }
-      }
-      this.todo_list = todo_info;
-      this.todo_completed = todo_completed_list;
-    });
-  }
 };
 </script>
 <style scoped>
@@ -268,29 +194,20 @@ export default {
   margin: 10px;
 }
 
-#todo-container > div:nth-child(odd) {
-  background: gold;
-}
-#todo-title {
-  text-align: center;
-  grid-column: 1 / span2; /* In the middle of col 1 and 2*/
-  margin: 15px auto;
-}
 .display-todo {
   grid-column-start: 1;
-  grid-row-start: 2;
+  grid-row-start: 1;
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 1fr;
   grid-gap: 1em;
 }
 .display-todo > div {
-  background: whitesmoke;
   border: 1px solid black;
 }
 .enter-todo {
   grid-column-start: 2;
-  grid-row-start: 2;
+  grid-row-start: 1;
   margin: 0 auto;
   border: 1px solid black;
   height: 120px;
