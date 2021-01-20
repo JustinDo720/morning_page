@@ -39,18 +39,18 @@
             </i>
           </button>
         </div>
-        <todo_list></todo_list>
+        <add_todo @finish='closeRefresh($event)'></add_todo>
       </div>
     </div>
   </div>
 </template>
 <script>
-import todo_list from "@/components/home_child_component/add_todo"
+import add_todo from "@/components/home_child_component/add_todo"
 
 export default {
   name: "Modal",
   components:{
-    todo_list
+    add_todo
   },
   props: {
     // We are going to use activeModal to control the Modal using v-if
@@ -74,6 +74,13 @@ export default {
     removeModal: function() {
       this.visibileModal = false;
       document.body.style.overflow = "";
+    },
+    closeRefresh: function(close){
+      if(close){
+        // If we are finished we need to tell the Modal to close but also tell the home page to run the init again
+        this.removeModal();
+        this.$emit('refresh-todo', true)
+      }
     }
   },
   beforeCreate() {

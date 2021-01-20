@@ -1,56 +1,55 @@
 <template>
-  <form>
-    <div class="input-field" v-if="signedIn">
-      <input
-        id="search"
-        type="text"
-        class="validate black-text"
-        v-model="searchTodo"
-      />
-      <label for="search" class="black-text">
-        <i class="material-icons">
-          search
-        </i>
-        Search For Your Todos
-      </label>
-      <!-- Normal View Buttons-->
-      <button
-      class='btn-small waves-effect waves-light green white-text'
+  <div class="input-field" v-if="signedIn">
+    <input
+      id="search"
+      type="text"
+      class="validate black-text"
+      v-model="searchTodo"
+    />
+    <label for="search" class="black-text">
+      <i class="material-icons">
+        search
+      </i>
+      Search For Your Todos
+    </label>
+    <!-- Normal View Buttons-->
+    <button
+    class='btn-small waves-effect waves-light green white-text'
+    v-if='!viewCompleted'
+    @click.prevent = 'changeView'
+    >
+      <i class='material-icons'>check_circle</i> View Completed
+    </button>&nbsp;
+    <button
+      class="btn-small waves-effect waves-light blue white-text"
       v-if='!viewCompleted'
-      @click = 'changeView'
-      >
-        <i class='material-icons'>check_circle</i> View Completed
-      </button>&nbsp;
-      <button
-        class="btn-small waves-effect waves-light blue white-text"
-        v-if='!viewCompleted'
-        @click.prevent="add_todo_mode = !add_todo_mode"
-      >
-        <i class="material-icons">add</i> Add Todo
-      </button>
-      <!-- Completed View Button -->
-      <button
-      v-if='viewCompleted'
-      @click='viewCompleted = !viewCompleted'
-      class='btn-small waves-effect waves-light grey white-text'
-      >
-        <i class='material-icons'>panorama_fish_eye</i> View Tasks In Progress
-      </button>
-      <modal_todo
-        v-if="add_todo_mode"
-        :active-modal="activateModal"
-        comp-name="todo"
-      >
-        <template v-slot:todo>
-        </template>
-      </modal_todo>
-    </div>
-    <div v-else>
-      <button @click="redirect_to_login" class="btn waves-effect waves-light">
-        Login
-      </button>
-    </div>
-  </form>
+      @click="add_todo_mode = !add_todo_mode"
+    >
+      <i class="material-icons">add</i> Add Todo
+    </button>
+    <!-- Completed View Button -->
+    <button
+    v-if='viewCompleted'
+    @click.prevent='viewCompleted = !viewCompleted'
+    class='btn-small waves-effect waves-light grey white-text'
+    >
+      <i class='material-icons'>panorama_fish_eye</i> View Tasks In Progress
+    </button>
+    <modal_todo
+      v-if="add_todo_mode"
+      :active-modal="activateModal"
+      comp-name="todo"
+      @refresh-todo='initalizeSetup'
+    >
+      <template v-slot:todo>
+      </template>
+    </modal_todo>
+  </div>
+  <div v-else>
+    <button @click="redirect_to_login" class="btn waves-effect waves-light">
+      Login
+    </button>
+  </div>
   <!-- Normal Tasks the Neutral ones -->
   <div id='normal-tasks' v-if="!viewCompleted">
     <div
@@ -124,32 +123,6 @@ export default {
       auth_user: firebaseApp.auth().currentUser.uid
     };
   },
-  created() {
-    try {
-      let auth_user = firebaseApp.auth().currentUser.uid;
-      // If auth_user is not null then the user is signed in.
-      this.signedIn = true;
-      let firebase_db_url = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${auth_user}/todo.json`;
-      axios.get(firebase_db_url).then(obj => {
-        let firebase_todos = [];
-        let completed_firebase_todos = [];
-        for (let firebase_id in obj.data) {
-          obj.data[firebase_id].todo_id = firebase_id;
-          if (obj.data[firebase_id].neutral) {
-            firebase_todos.unshift(obj.data[firebase_id]);
-          }else if(obj.data[firebase_id].completed){
-            completed_firebase_todos.unshift(obj.data[firebase_id])
-          }
-        }
-        this.fetched_todos = firebase_todos;
-        this.completed_fetched_todos = completed_firebase_todos;
-        console.log(`Neutral Todos: ${this.fetched_todos}, Completed Todos: ${this.completed_fetched_todos}`)
-      });
-    } catch (err) {
-      // If auth_user does not exist then the user is not signed in
-      this.signedIn = false;
-    }
-  },
   computed: {
     filteredTodos: function() {
       return this.fetched_todos.filter(todo => {
@@ -160,6 +133,33 @@ export default {
     }
   },
   methods: {
+    initalizeSetup(){
+      try {
+        let auth_user = firebaseApp.auth().currentUser.uid;
+        // If auth_user is not null then the user is signed in.
+        this.signedIn = true;
+        let firebase_db_url = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${auth_user}/todo.json`;
+        axios.get(firebase_db_url).then(obj => {
+          let firebase_todos = [];
+          let completed_firebase_todos = [];
+          for (let firebase_id in obj.data) {
+            obj.data[firebase_id].todo_id = firebase_id;
+            if (obj.data[firebase_id].neutral) {
+              firebase_todos.unshift(obj.data[firebase_id]);
+            }else if(obj.data[firebase_id].completed){
+              completed_firebase_todos.unshift(obj.data[firebase_id])
+            }
+          }
+          this.fetched_todos = firebase_todos;
+          this.completed_fetched_todos = completed_firebase_todos;
+          console.log(`Neutral Todos: ${this.fetched_todos}, Completed Todos: ${this.completed_fetched_todos}`)
+        });
+      } catch (err) {
+        // If auth_user does not exist then the user is not signed in
+        this.signedIn = false;
+      }
+    }
+    ,
     updateStatus: function(task_id, task_status, mode) {
       let task_at_hand = this.fetched_todos[task_id];
       let task_completed = this.completed_fetched_todos[task_id];
@@ -207,9 +207,11 @@ export default {
     },
     changeView: function(){
       this.viewCompleted = !this.viewCompleted
-
-    }
-  }
+    },
+  },
+  created() {
+    this.initalizeSetup();
+  },
 };
 </script>
 <style scoped>

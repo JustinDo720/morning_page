@@ -47,6 +47,14 @@
         v-model="todo"
         @keyup.enter.prevent="add_todo"
       /><br/>
+      <button
+          class='btn waves-light waves-effect green white-text'
+          @click.prevent='saveTodos'
+          style='margin: 10px;'
+          v-if='number_of_todo >= 1'
+      >
+        Save All Todos
+      </button>
     </div>
   </div>
 </template>
@@ -93,10 +101,7 @@ export default {
     };
   },
   methods: {
-    async add_todo() {
-      let firebase_db_url = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${this.auth_user}/todo.json`;
-      console.log(firebase_db_url);
-      console.log(this.auth_user);
+    add_todo() {
       //* Makes sure that the user input wasn't on accident
       if (this.todo !== "") {
         let task_date = new Date();
@@ -117,17 +122,11 @@ export default {
         };
 
         // We need to await for the post before performing a get request to get the latest things
-        await axios.post(firebase_db_url, todo_info).then(obj => {
-          // Next try to work with this method
-          console.log("Success", obj.data.name);
-          this.todo = "";
-          // We are going to add this to the list for our program to render if the item was posted
-          todo_info['todo_id'] = obj.data.name
-          this.todo_list.unshift(todo_info)
-          console.log(this.todo_list, todo_info)
-          this.number_of_todo += 1
-          console.log(this.number_of_todo)
-        });
+        this.todo_list.unshift(todo_info)
+        console.log(this.todo_list, todo_info)
+        this.number_of_todo += 1
+        console.log(this.number_of_todo)
+        this.todo = "";
       }
     },
     deleteTodo: function(task_id) {
@@ -135,11 +134,22 @@ export default {
       console.log(task_at_hand)
       // At this point the user just wants to remove the task
       // The idea behind this is that we use mode to see which array we need to edit
-      const USER_FIREBASE_URL = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${this.auth_user}/todo/${task_at_hand.todo_id}.json`;
       this.todo_list.splice(task_id, 1);
       console.log('I should be right here')
-      axios.delete(USER_FIREBASE_URL);
       this.number_of_todo -= 1
+    },
+    saveTodos: function(){ // Once the user presses the save button
+      let firebase_url = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${this.auth_user}/todo.json`
+      // We can't just do list.reverse() it's destructive so we use the spread orderator
+      let ordered_todo = [...this.todo_list].reverse();
+      for (let todo in ordered_todo){
+        console.log(ordered_todo[todo])
+        axios.post(firebase_url, ordered_todo[todo]).then(response => {
+          console.log(response.data)
+          // This means that the user wants to save changes so lets go ahead and emit an event for our parent
+          this.$emit('finish', true) // this.$emit('event_name', value)
+        })
+      }
     }
   },
 };
@@ -170,9 +180,9 @@ export default {
   grid-row-start: 1;
   margin: 0 auto;
   border: 1px solid black;
-  height: 120px;
+  height: 150px;
   width: 500px;
-  max-height: 120px;
+  max-height: 150px;
   text-align: center;
   padding: 10px;
 }
