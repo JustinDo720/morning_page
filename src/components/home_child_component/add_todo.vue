@@ -8,53 +8,80 @@
       <div
         id="individual-task"
         v-for="(task, todo_id) in todo_list"
-        :class="{
-          task_done: task.completed,
-          task_neutral: task.neutral,
-          task_removed: task.removed
+        class="{
+         grey lighten-1
         }"
         :key="todo_id"
       >
-        <div>
+        <div class='left' style='width:750px'>
           <ul>
             <li>
-              <h4>
-                {{ task.todo_item }}
+              <p class='flow-text' style='text-align:left'>
+                {{ task.todo_item }}&nbsp;
+              </p>
+              <div>
+                <p class='left' style='text-align: left;'>
+                  {{ task.task_date }}
+                </p>
                 <button
-                  class="deleted"
-                  @click.prevent="deleteTodo(todo_id)"
+                    class="deleted btn red white-text right "
+                    @click.prevent="deleteTodo(todo_id)"
+                    style='margin: 10px;'
                 >
-                  &cross;
+                  Delete
                 </button>
-              </h4>
-              <span>
-                {{ task.task_date }}
-              </span>
+              </div>
+
             </li>
           </ul>
         </div>
-
-        <div v-if='number_of_todo > 3'>
-          Hello
-        </div>
       </div>
     </div>
-    <div class="todo-list enter-todo">
-      <h6 id="enter-todo-title">Add a To-Do item to your list!</h6>
+    <div :class="{'todo-list':true, 'enter-todo':true, 'grey lighten-4':true, 'large-todo':largeTodo}">
+
       <input
-        class="todo_input"
-        placeholder="Add an item to your list"
-        v-model="todo"
-        @keyup.enter.prevent="add_todo"
-      /><br/>
+          id='todo-item'
+          v-if='!largeTodo'
+          class="black-text todo_input"
+          v-model="todo"
+          type='text'
+          @keyup.enter.prevent="add_todo"
+          style='margin:10px;'
+          placeholder= 'Add your todo here'
+      />
+
+      <textarea
+          class="materialize-textarea"
+          v-else
+          v-model='todo'
+          @keyup.enter = 'add_todo'
+          placeholder='Please type out your todo here.'
+      >
+      </textarea>
+
+
+      <br/>
       <button
-          class='btn waves-light waves-effect green white-text'
+          class='btn waves-light waves-effect deep-purple lighten-3 white-text'
           @click.prevent='saveTodos'
           style='margin: 10px;'
-          v-if='number_of_todo >= 1'
       >
         Save All Todos
       </button>
+      <div class="switch">
+        <label>
+          <span v-if='!largeTodo'>
+            Smaller Todo
+          </span>
+
+          <input type="checkbox" @click='largeTodo = !largeTodo'>
+          <span class="lever"></span>
+          <span v-if='largeTodo'>
+            Large Todo
+          </span>
+
+        </label>
+      </div>
     </div>
   </div>
 </template>
@@ -73,7 +100,7 @@ export default {
       task_completed: false,
       task_removed: false,
       task_neutral: true,
-      number_of_todo: 0,
+      largeTodo: false,
       months: [
         "January",
         "February",
@@ -171,18 +198,21 @@ export default {
   grid-template-columns: 1fr;
   grid-template-rows: 1fr;
   grid-gap: 1em;
-}
-.display-todo > div {
   border: 1px solid black;
+  max-height: 800px;
+  overflow: scroll;
+  overflow-x: hidden;
+  max-width: 800px;
 }
+
 .enter-todo {
   grid-column-start: 2;
   grid-row-start: 1;
   margin: 0 auto;
   border: 1px solid black;
-  height: 150px;
+  height: 200px;
   width: 500px;
-  max-height: 150px;
+  max-height: 250px;
   text-align: center;
   padding: 10px;
 }
@@ -192,8 +222,7 @@ export default {
   text-align: center;
   margin: 5px 20px;
   padding: 40px;
-  background: whitesmoke;
-  border: 1px solid black;
+  height: 120px;
 }
 #enter-todo-title {
   text-align: center;
@@ -245,6 +274,12 @@ export default {
 .task_neutral div {
   background: lightgray;
   padding: 19px;
+}
+
+.large-todo{
+  width: 600px;
+  max-height: 250px;
+  height: 250px;
 }
 
 /* Html Elements */

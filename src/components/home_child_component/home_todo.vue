@@ -80,7 +80,7 @@
   <!-- Completed Tasks -->
   <div id='completed-tasks' v-if='viewCompleted'>
     <div
-        v-for="(todo, index) in completed_fetched_todos"
+        v-for="(todo, index) in filteredTodos"
         :key="index"
     >
       <p id="todo_item" class="flow-text">
@@ -125,11 +125,22 @@ export default {
   },
   computed: {
     filteredTodos: function() {
-      return this.fetched_todos.filter(todo => {
-        return todo.todo_item
-          .toLowerCase()
-          .match(this.searchTodo.toLowerCase());
-      });
+      if(!this.viewCompleted){
+        console.log('I am in normal view')
+        return this.fetched_todos.filter(todo => {
+          return todo.todo_item
+              .toLowerCase()
+              .match(this.searchTodo.toLowerCase());
+        });
+      }else{
+        console.log('I am in completed view')
+        return this.completed_fetched_todos.filter(todo => {
+          return todo.todo_item
+              .toLowerCase()
+              .match(this.searchTodo.toLowerCase());
+        });
+      }
+
     }
   },
   methods: {

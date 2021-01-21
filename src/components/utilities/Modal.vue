@@ -27,8 +27,12 @@
     </div>
     <!-- Todo_Modal -->
     <div
+      style='
+        width:90%;
+        height:90%;
+      '
       id="todo-modal"
-      class="modal_item white"
+      class="modal_item white paperBG"
       v-if="currentCompName == 'todo'"
     >
       <div>
@@ -46,7 +50,6 @@
 </template>
 <script>
 import add_todo from "@/components/home_child_component/add_todo"
-
 export default {
   name: "Modal",
   components:{
@@ -67,7 +70,7 @@ export default {
   data() {
     return {
       visibileModal: this.activeModal,
-      currentCompName: this.compName
+      currentCompName: this.compName,
     };
   },
   methods: {
@@ -108,5 +111,9 @@ export default {
   width: auto;
   box-shadow: 1px 2px 4px rgba(153, 155, 168, 0.12);
   border-raidus: 4px;
+}
+
+.paperBG{
+  background-image : url('../../assets/paper-bg.jpg');
 }
 </style>
