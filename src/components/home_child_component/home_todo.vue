@@ -50,55 +50,60 @@
       Login
     </button>
   </div>
+
   <!-- Normal Tasks the Neutral ones -->
-  <div id='normal-tasks' v-if="!viewCompleted">
-    <div
-        v-for="(todo, index) in filteredTodos"
-        :key="index"
-        :class="{
+  <div class='limTodo'>
+    <div id='normal-tasks' v-if="!viewCompleted">
+      <div
+          v-for="(todo, index) in filteredTodos"
+          :key="index"
+          :class="{
           task_done: todo.completed,
           task_neutral: todo.neutral,
-          task_removed: todo.removed
+          task_removed: todo.removed,
+          'grey lighten-3': true
         }"
-    >
-      <p id="todo_item" class="flow-text">
-        {{ todo.todo_item }}
-        <button class="deleted" @click="updateStatus(index, 'deleted', 'normal_mode')">
-          &cross;
-        </button>
-        <button class="completed" @click="updateStatus(index, 'completed', 'normal_mode')">
-          &checkmark;</button
-        >&nbsp;
-      </p>
+      >
+        <p id="todo_item" class="flow-text">
+          {{ todo.todo_item }}
+          <button class="deleted" @click="updateStatus(index, 'deleted', 'normal_mode')">
+            &cross;
+          </button>
+          <button class="completed" @click="updateStatus(index, 'completed', 'normal_mode')">
+            &checkmark;</button
+          >&nbsp;
+        </p>
 
-      <p id="task_date">
-        {{ todo.task_date }}
-      </p>
+        <p id="task_date">
+          {{ todo.task_date }}
+        </p>
+      </div><br>
+    </div>
+
+    <!-- Completed Tasks -->
+    <div class='grey lighten-3' id='completed-tasks' v-if='viewCompleted'>
+      <div
+          v-for="(todo, index) in filteredTodos"
+          :key="index"
+      >
+        <p id="todo_item" class="flow-text">
+          {{ todo.todo_item }}
+          <button class="deleted" @click="updateStatus(index, 'deleted', 'completed_mode')">
+            <i class='material-icons'>clear</i>
+          </button>
+          &nbsp;
+          <button class="neutral" @click="updateStatus(index, 'undo', 'completed_mode')">
+            <i class='material-icons'>undo</i>
+          </button>
+        </p>
+
+        <p id="task_date">
+          {{ todo.task_date }}
+        </p>
+      </div>
     </div>
   </div>
 
-  <!-- Completed Tasks -->
-  <div id='completed-tasks' v-if='viewCompleted'>
-    <div
-        v-for="(todo, index) in filteredTodos"
-        :key="index"
-    >
-      <p id="todo_item" class="flow-text">
-        {{ todo.todo_item }}
-        <button class="deleted" @click="updateStatus(index, 'deleted', 'completed_mode')">
-          <i class='material-icons'>clear</i>
-        </button>
-        &nbsp;
-        <button class="neutral" @click="updateStatus(index, 'undo', 'completed_mode')">
-          <i class='material-icons'>undo</i>
-        </button>
-      </p>
-
-      <p id="task_date">
-        {{ todo.task_date }}
-      </p>
-    </div>
-  </div>
   </template>
 <script>
 import axios from "axios";
@@ -285,6 +290,12 @@ button {
 .task_neutral div {
   background: lightgray;
   padding: 19px;
+}
+
+.limTodo{
+  overflow: scroll;
+  overflow-x: hidden;
+  max-height: 950px;
 }
 
 </style>
