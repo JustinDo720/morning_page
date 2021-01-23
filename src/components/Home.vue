@@ -313,6 +313,7 @@ export default {
   grid-row-end: 5;
 }
 
+
 /* Weather */
 
 .weather {

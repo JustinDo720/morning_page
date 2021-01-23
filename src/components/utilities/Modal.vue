@@ -27,8 +27,12 @@
     </div>
     <!-- Todo_Modal -->
     <div
+      style='
+        width:90%;
+        height:90%;
+      '
       id="todo-modal"
-      class="modal_item white"
+      class="modal_item white paperBG"
       v-if="currentCompName == 'todo'"
     >
       <div>
@@ -39,18 +43,17 @@
             </i>
           </button>
         </div>
-        <todo_list></todo_list>
+        <add_todo @finish='closeRefresh($event)'></add_todo>
       </div>
     </div>
   </div>
 </template>
 <script>
-import todo_list from "@/components/todo-list"
-
+import add_todo from "@/components/home_child_component/add_todo"
 export default {
   name: "Modal",
   components:{
-    todo_list
+    add_todo
   },
   props: {
     // We are going to use activeModal to control the Modal using v-if
@@ -67,13 +70,20 @@ export default {
   data() {
     return {
       visibileModal: this.activeModal,
-      currentCompName: this.compName
+      currentCompName: this.compName,
     };
   },
   methods: {
     removeModal: function() {
       this.visibileModal = false;
       document.body.style.overflow = "";
+    },
+    closeRefresh: function(close){
+      if(close){
+        // If we are finished we need to tell the Modal to close but also tell the home page to run the init again
+        this.removeModal();
+        this.$emit('refresh-todo', true)
+      }
     }
   },
   beforeCreate() {
@@ -101,5 +111,9 @@ export default {
   width: auto;
   box-shadow: 1px 2px 4px rgba(153, 155, 168, 0.12);
   border-raidus: 4px;
+}
+
+.paperBG{
+  background-image : url('../../assets/paper-bg.jpg');
 }
 </style>
