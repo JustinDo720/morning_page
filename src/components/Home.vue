@@ -19,7 +19,7 @@
       </div>
     </div>
 
-    <div class="todo card">
+    <div class="todo card grey lighten-3">
       <div class="card-content">
         <h4>
           {{ r1m_title }}
@@ -224,7 +224,7 @@
       </div>
     </div>
 
-    <div class="weather card" :class="temp_controller">
+    <div class="weather card " :class="temp_controller">
       <div class="card-content">
         <home_weather
           :signedIn="signedIn"
