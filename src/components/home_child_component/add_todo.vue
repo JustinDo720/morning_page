@@ -10,6 +10,7 @@
         v-for="(task, todo_id) in todo_list"
         class="{
          grey lighten-1
+         boxTask
         }"
         :key="todo_id"
       >
@@ -198,11 +199,12 @@ export default {
   grid-template-columns: 1fr;
   grid-template-rows: 1fr;
   grid-gap: 1em;
-  border: 1px solid black;
   max-height: 800px;
   overflow: scroll;
   overflow-x: hidden;
   max-width: 800px;
+  border: 1px solid black;
+
 }
 
 .enter-todo {
@@ -241,6 +243,13 @@ export default {
   line-height: 30px;
   -moz-transition: all 0.4s ease; /* Transition for Mozilla! */
   -webkit-transition: all 0.4s ease; /* For other browsers */
+}
+
+.boxTask{
+  box-shadow: 2px 5px rgba(0, 0, 0, 0.25);
+  border-radius: 16px;
+  padding:10px;
+  margin: 10px auto;
 }
 
 .completed {

@@ -14,32 +14,32 @@
     </label>
     <!-- Normal View Buttons-->
     <button
-    class='btn-small waves-effect waves-light green white-text'
-    v-if='!viewCompleted'
-    @click.prevent = 'changeView'
+        class='btn-small waves-effect waves-light green white-text'
+        v-if='!viewCompleted'
+        @click.prevent = 'changeView'
     >
       <i class='material-icons'>check_circle</i> View Completed
     </button>&nbsp;
     <button
-      class="btn-small waves-effect waves-light blue white-text"
-      v-if='!viewCompleted'
-      @click="add_todo_mode = !add_todo_mode"
+        class="btn-small waves-effect waves-light blue white-text"
+        v-if='!viewCompleted'
+        @click="add_todo_mode = !add_todo_mode"
     >
       <i class="material-icons">add</i> Add Todo
     </button>
     <!-- Completed View Button -->
     <button
-    v-if='viewCompleted'
-    @click.prevent='viewCompleted = !viewCompleted'
-    class='btn-small waves-effect waves-light grey white-text'
+        v-if='viewCompleted'
+        @click.prevent='viewCompleted = !viewCompleted'
+        class='btn-small waves-effect waves-light grey white-text'
     >
       <i class='material-icons'>panorama_fish_eye</i> View Tasks In Progress
     </button>
     <modal_todo
-      v-if="add_todo_mode"
-      :active-modal="activateModal"
-      comp-name="todo"
-      @refresh-todo='initalizeSetup'
+        v-if="add_todo_mode"
+        :active-modal="activateModal"
+        comp-name="todo"
+        @refresh-todo='initalizeSetup'
     >
       <template v-slot:todo>
       </template>
@@ -53,46 +53,49 @@
 
   <!-- Normal Tasks the Neutral ones -->
   <div class='limTodo'>
-    <div id='normal-tasks' v-if="!viewCompleted">
+    <div id='normal-tasks' v-if="!viewCompleted" >
       <div
+          style='margin: 10px; padding: 5px'
           v-for="(todo, index) in filteredTodos"
           :key="index"
           :class="{
           task_done: todo.completed,
           task_neutral: todo.neutral,
           task_removed: todo.removed,
-          'grey lighten-3': true
+          'blue-grey lighten-4': true,
+          'buttonOverlay':true
         }"
       >
-        <p id="todo_item" class="flow-text">
-          {{ todo.todo_item }}
-          <button class="deleted" @click="updateStatus(index, 'deleted', 'normal_mode')">
-            &cross;
-          </button>
-          <button class="completed" @click="updateStatus(index, 'completed', 'normal_mode')">
-            &checkmark;</button
-          >&nbsp;
-        </p>
-
-        <p id="task_date">
-          {{ todo.task_date }}
-        </p>
-      </div><br>
+      <p id="todo_item" class="flow-text">
+        {{ todo.todo_item }}
+      </p>
+        <button class="deleted buttonAppear" @click="updateStatus(index, 'deleted', 'normal_mode')">
+          &cross;
+        </button>
+        <button class="completed buttonAppear" @click="updateStatus(index, 'completed', 'normal_mode')">
+          &checkmark;</button
+        >&nbsp;
+      <p id="task_date">
+        {{ todo.task_date }}
+      </p>
+      </div>
     </div>
-
     <!-- Completed Tasks -->
     <div class='grey lighten-3' id='completed-tasks' v-if='viewCompleted'>
       <div
+          style='margin: 10px;'
           v-for="(todo, index) in filteredTodos"
           :key="index"
+          class='green lighten-3 buttonOverlay'
+
       >
         <p id="todo_item" class="flow-text">
           {{ todo.todo_item }}
-          <button class="deleted" @click="updateStatus(index, 'deleted', 'completed_mode')">
+          <button class="deleted buttonAppear" @click="updateStatus(index, 'deleted', 'completed_mode')">
             <i class='material-icons'>clear</i>
           </button>
           &nbsp;
-          <button class="neutral" @click="updateStatus(index, 'undo', 'completed_mode')">
+          <button class="neutral buttonAppear" @click="updateStatus(index, 'undo', 'completed_mode')">
             <i class='material-icons'>undo</i>
           </button>
         </p>
@@ -296,6 +299,19 @@ button {
   overflow: scroll;
   overflow-x: hidden;
   max-height: 950px;
+}
+
+.buttonAppear{
+  display:none
+}
+
+.buttonOverlay{
+  box-shadow: 2px 5px rgba(0, 0, 0, 0.25);
+  border-radius: 16px;
+  padding:10px
+}
+.buttonOverlay:hover .buttonAppear{
+  display:block;
 }
 
 </style>

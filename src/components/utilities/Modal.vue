@@ -32,7 +32,7 @@
         height:90%;
       '
       id="todo-modal"
-      class="modal_item white paperBG"
+      class="modal_item white teal lighten-3"
       v-if="currentCompName == 'todo'"
     >
       <div>
@@ -113,7 +113,11 @@ export default {
   border-raidus: 4px;
 }
 
+/*
+
 .paperBG{
   background-image : url('../../assets/paper-bg.jpg');
 }
+
+ */
 </style>
