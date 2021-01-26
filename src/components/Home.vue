@@ -2,20 +2,9 @@
   <div id="app-container" class="grid-container">
     <navigation :key="$route.fullPath"></navigation>
     <router-view :key="$route.fullPath"></router-view>
-    <div class="quote-of-day card grey darken-3 gold-border">
+    <div class="quote-of-day card grey darken-2 gold-border">
       <div class="card-content">
-        <h4>
-          {{ r1l_title }}
-        </h4>
-        <p class="flow-text green-text accent-3">
-          Difficulties increase the nearer we get to the goal.
-        </p>
-        <div class="flow-text green-text accent-3">
-          <p>
-            - Johann Wolfgang von Goethe
-          </p>
-        </div>
-        <!--<home_quote_of_day></home_quote_of_day> -->
+        <home_quote_of_day></home_quote_of_day>
       </div>
     </div>
 
@@ -28,11 +17,8 @@
       </div>
     </div>
 
-    <div class="news card light-blue lighten-2">
+    <div class="news card light-blue darken-3">
       <div class="card-content">
-        <h4>
-          {{ r1r_title }}
-        </h4>
         <home_news></home_news>
       </div>
     </div>
@@ -51,9 +37,8 @@
 <script>
 import home_todo from "@/components/home_child_component/home_todo";
 import home_news from "@/components/home_child_component/home_news";
-//import home_quote_of_day from "@/components/home_child_component/home_quote_of_day";
+import home_quote_of_day from "@/components/home_child_component/home_quote_of_day";
 import home_weather from "@/components/home_child_component/home_weather";
-//import Modal from '@/components/utilities/Modal.vue';
 import firebaseApp from "@/components/db";
 import axios from "axios";
 
@@ -61,17 +46,14 @@ export default {
   name: "home_page",
   components: {
     home_todo,
-    //modal_test: Modal,
-    //home_quote_of_day,
+    home_quote_of_day,
     home_news,
     home_weather
   },
   data() {
     return {
-      r1l_title: "Quote of the Day", //* row 1 left title
       r1m_title: "To-Do List", //* row 1 middle title
       r1r_title: "News", //* row 1 right title
-      r2l_title: "Weather", //* row 2 left title
       todo: [],
       edit_weather: false,
       city: "",
@@ -82,7 +64,6 @@ export default {
   methods: {
     changeTempBG: function(background_temp) {
       this.temp_controller = background_temp;
-      console.log(this.temp_controller, background_temp);
     }
   },
   created() {
@@ -126,7 +107,6 @@ export default {
   grid-row-end: 5;
 }
 
-
 /* Weather */
 
 .weather {
@@ -162,6 +142,6 @@ export default {
 }
 
 .gold-border {
-  border: 10px solid gold;
+  border: 10px solid #a17f1a;
 }
 </style>

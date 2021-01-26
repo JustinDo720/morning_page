@@ -2,19 +2,27 @@
   <div>
     <div class="container">
       <div class="row">
-        <div class="col s12 m8 offset-mk2">
+        <div style="margin:80px 100px 90px; margin-left: 240px; width:67%">
           <div class="login card-panel green white-text center">
             <h3>Login</h3>
             <form>
               <div class="input-field">
                 <i class="material-icons prefix">email</i>
-                <input v-model="email" type="text" id="email" />
-                <label class="white-text">Email</label>
+                <input
+                  v-model="email"
+                  type="text"
+                  id="email"
+                  placeholder="Email"
+                />
               </div>
               <div class="input-field">
                 <i class="material-icons prefix">lock</i>
-                <input v-model="password" type="password" id="password" />
-                <label class="white-text">Password</label>
+                <input
+                  v-model="password"
+                  type="password"
+                  id="password"
+                  placeholder="Password"
+                />
               </div>
               <button
                 @click="login"

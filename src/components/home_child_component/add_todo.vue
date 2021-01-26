@@ -1,86 +1,92 @@
 <template>
   <div id="todo-container">
     <div class="todo-list display-todo">
-      <h4 class="display-todo-empty" v-if="todo_list.length === 0">
-        You have not added any Todo items yet.
-      </h4>
+      <div v-if="todo_list.length === 0">
+        <h4 class="display-todo-empty boxTask deep-purple lighten-3">
+          You have not added any Todo items yet.
+        </h4>
+      </div>
+
       <!-- Setting task_done and using the var right on v-for actually works -->
       <div
         id="individual-task"
         v-for="(task, todo_id) in todo_list"
         class="{
-         grey lighten-1
+         deep-purple lighten-3
          boxTask
         }"
         :key="todo_id"
       >
-        <div class='left' style='width:750px'>
+        <div class="left" style="width:750px">
           <ul>
             <li>
-              <p class='flow-text' style='text-align:left'>
+              <p class="flow-text" style="text-align:left">
                 {{ task.todo_item }}&nbsp;
               </p>
               <div>
-                <p class='left' style='text-align: left;'>
+                <p class="left" style="text-align: left;">
                   {{ task.task_date }}
                 </p>
                 <button
-                    class="deleted btn red white-text right "
-                    @click.prevent="deleteTodo(todo_id)"
-                    style='margin: 10px;'
+                  class="deleted btn red white-text right "
+                  @click.prevent="deleteTodo(todo_id)"
+                  style="margin: 10px;"
                 >
                   Delete
                 </button>
               </div>
-
             </li>
           </ul>
         </div>
       </div>
     </div>
-    <div :class="{'todo-list':true, 'enter-todo':true, 'grey lighten-4':true, 'large-todo':largeTodo}">
-
+    <div
+      :class="{
+        'todo-list': true,
+        'enter-todo': true,
+        'grey lighten-4': true,
+        'large-todo': largeTodo
+      }"
+    >
       <input
-          id='todo-item'
-          v-if='!largeTodo'
-          class="black-text todo_input"
-          v-model="todo"
-          type='text'
-          @keyup.enter.prevent="add_todo"
-          style='margin:10px;'
-          placeholder= 'Add your todo here'
+        id="todo-item"
+        v-if="!largeTodo"
+        class="black-text todo_input"
+        v-model="todo"
+        type="text"
+        @keyup.enter.prevent="add_todo"
+        style="margin:10px;"
+        placeholder="Add your todo here"
       />
 
       <textarea
-          class="materialize-textarea"
-          v-else
-          v-model='todo'
-          @keyup.enter = 'add_todo'
-          placeholder='Please type out your todo here.'
+        class="materialize-textarea"
+        v-else
+        v-model="todo"
+        @keyup.enter="add_todo"
+        placeholder="Please type out your todo here."
       >
       </textarea>
 
-
-      <br/>
+      <br />
       <button
-          class='btn waves-light waves-effect deep-purple lighten-3 white-text'
-          @click.prevent='saveTodos'
-          style='margin: 10px;'
+        class="btn waves-light waves-effect deep-purple lighten-3 white-text"
+        @click.prevent="saveTodos"
+        style="margin: 10px;"
       >
         Save All Todos
       </button>
       <div class="switch">
         <label>
-          <span v-if='!largeTodo'>
+          <span v-if="!largeTodo">
             Smaller Todo
           </span>
 
-          <input type="checkbox" @click='largeTodo = !largeTodo'>
+          <input type="checkbox" @click="largeTodo = !largeTodo" />
           <span class="lever"></span>
-          <span v-if='largeTodo'>
+          <span v-if="largeTodo">
             Large Todo
           </span>
-
         </label>
       </div>
     </div>
@@ -150,36 +156,37 @@ export default {
         };
 
         // We need to await for the post before performing a get request to get the latest things
-        this.todo_list.unshift(todo_info)
-        console.log(this.todo_list, todo_info)
-        this.number_of_todo += 1
-        console.log(this.number_of_todo)
+        this.todo_list.unshift(todo_info);
+        console.log(this.todo_list, todo_info);
+        this.number_of_todo += 1;
+        console.log(this.number_of_todo);
         this.todo = "";
       }
     },
     deleteTodo: function(task_id) {
       let task_at_hand = this.todo_list[task_id];
-      console.log(task_at_hand)
+      console.log(task_at_hand);
       // At this point the user just wants to remove the task
       // The idea behind this is that we use mode to see which array we need to edit
       this.todo_list.splice(task_id, 1);
-      console.log('I should be right here')
-      this.number_of_todo -= 1
+      console.log("I should be right here");
+      this.number_of_todo -= 1;
     },
-    saveTodos: function(){ // Once the user presses the save button
-      let firebase_url = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${this.auth_user}/todo.json`
+    saveTodos: function() {
+      // Once the user presses the save button
+      let firebase_url = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${this.auth_user}/todo.json`;
       // We can't just do list.reverse() it's destructive so we use the spread orderator
       let ordered_todo = [...this.todo_list].reverse();
-      for (let todo in ordered_todo){
-        console.log(ordered_todo[todo])
+      for (let todo in ordered_todo) {
+        console.log(ordered_todo[todo]);
         axios.post(firebase_url, ordered_todo[todo]).then(response => {
-          console.log(response.data)
+          console.log(response.data);
           // This means that the user wants to save changes so lets go ahead and emit an event for our parent
-          this.$emit('finish', true) // this.$emit('event_name', value)
-        })
+          this.$emit("finish", true); // this.$emit('event_name', value)
+        });
       }
     }
-  },
+  }
 };
 </script>
 <style scoped>
@@ -203,8 +210,6 @@ export default {
   overflow: scroll;
   overflow-x: hidden;
   max-width: 800px;
-  border: 1px solid black;
-
 }
 
 .enter-todo {
@@ -245,11 +250,12 @@ export default {
   -webkit-transition: all 0.4s ease; /* For other browsers */
 }
 
-.boxTask{
+.boxTask {
   box-shadow: 2px 5px rgba(0, 0, 0, 0.25);
   border-radius: 16px;
-  padding:10px;
+  padding: 10px;
   margin: 10px auto;
+  margin-right: 10px;
 }
 
 .completed {
@@ -285,7 +291,7 @@ export default {
   padding: 19px;
 }
 
-.large-todo{
+.large-todo {
   width: 600px;
   max-height: 250px;
   height: 250px;

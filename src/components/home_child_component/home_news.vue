@@ -1,6 +1,10 @@
 <template>
-  <div class='newsContainer'>
-    <div v-for="(news, news_id) in news_from_request" :key="news_id" class='newsBox light-blue lighten-3'>
+  <div class="newsContainer">
+    <div
+      v-for="(news, news_id) in news_from_request"
+      :key="news_id"
+      class="newsBox light-blue lighten-5"
+    >
       <a :href="news.link">
         <p class="flow-text indigo-text darken-3">
           {{ news.title }}
@@ -67,13 +71,13 @@ h3 {
   color: black;
 }
 
-.newsBox{
+.newsBox {
   border-radius: 5%;
-  margin:10px auto;
-  padding:10px;
+  margin: 10px;
+  padding: 5px;
 }
 
-.newsContainer{
+.newsContainer {
   overflow-y: scroll;
   max-height: 700px;
 }
