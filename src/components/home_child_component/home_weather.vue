@@ -131,25 +131,23 @@ export default {
       }
 
       const url = `https://api.openweathermap.org/data/2.5/weather?q=${this.info.city_name}&appid=${this.info.API_key}`;
-      // axios.get(url).then(obj => {
-      //   console.log(obj.data)
-      //   this.location_name = obj.data.name;
-      //   this.description = obj.data.weather[0].main;
-      //   let f_temp = Math.round((obj.data.main.temp - 273.15) * 1.8 + 32);
-      //   // Testing Temp for testing the background of each temp
-      //   let testing_temp = 90
-      //   if(f_temp > 70){
-      //     this.temp_controller = 'hot'
-      //   }else if(f_temp < 50){
-      //     this.temp_controller = 'cold'
-      //   }else{
-      //     this.temp_controller = 'warm'
-      //   }
-      //   // We emit our event called temp given the temp_controller value for the home page to use for dynamic css bg
-      //   this.$emit('temp', this.temp_controller)
-      //   this.temp = `${f_temp}°F`;
-      //
-      // });
+      axios.get(url).then(obj => {
+        this.location_name = obj.data.name;
+        this.description = obj.data.weather[0].main;
+        let f_temp = Math.round((obj.data.main.temp - 273.15) * 1.8 + 32);
+        // Testing Temp for testing the background of each temp
+        let testing_temp = 90;
+        if (f_temp > 70) {
+          this.temp_controller = "hot";
+        } else if (f_temp < 50) {
+          this.temp_controller = "cold";
+        } else {
+          this.temp_controller = "warm";
+        }
+        // We emit our event called temp given the temp_controller value for the home page to use for dynamic css bg
+        this.$emit("temp", this.temp_controller);
+        this.temp = `${f_temp}°F`;
+      });
     },
     async enterCity() {
       let auth_user = firebaseApp.auth().currentUser.uid;

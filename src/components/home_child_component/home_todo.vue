@@ -14,89 +14,102 @@
     </label>
     <!-- Normal View Buttons-->
     <button
-        class='btn-small waves-effect waves-light green white-text'
-        v-if='!viewCompleted'
-        @click.prevent = 'changeView'
+      class="btn-small waves-effect waves-light green white-text"
+      v-if="!viewCompleted"
+      @click.prevent="changeView"
     >
-      <i class='material-icons'>check_circle</i> View Completed
-    </button>&nbsp;
+      <i class="material-icons">check_circle</i> View Completed</button
+    >&nbsp;
     <button
-        class="btn-small waves-effect waves-light blue white-text"
-        v-if='!viewCompleted'
-        @click="add_todo_mode = !add_todo_mode"
+      class="btn-small waves-effect waves-light blue white-text"
+      v-if="!viewCompleted"
+      @click="add_todo_mode = !add_todo_mode"
     >
       <i class="material-icons">add</i> Add Todo
     </button>
     <!-- Completed View Button -->
     <button
-        v-if='viewCompleted'
-        @click.prevent='viewCompleted = !viewCompleted'
-        class='btn-small waves-effect waves-light grey white-text'
+      v-if="viewCompleted"
+      @click.prevent="viewCompleted = !viewCompleted"
+      class="btn-small waves-effect waves-light grey white-text"
     >
-      <i class='material-icons'>panorama_fish_eye</i> View Tasks In Progress
+      <i class="material-icons">panorama_fish_eye</i> View Tasks In Progress
     </button>
     <modal_todo
-        v-if="add_todo_mode"
-        :active-modal="activateModal"
-        comp-name="todo"
-        @refresh-todo='initalizeSetup'
+      v-if="add_todo_mode"
+      :active-modal="activateModal"
+      comp-name="todo"
+      @refresh-todo="initalizeSetup"
     >
-      <template v-slot:todo>
-      </template>
+      <template v-slot:todo> </template>
     </modal_todo>
   </div>
   <div v-else>
-    <button @click="redirect_to_login" class="btn waves-effect waves-light">
+    <button
+      @click="redirect_to_login"
+      class="btn waves-effect waves-light grey darken-1"
+    >
       Login
     </button>
   </div>
 
   <!-- Normal Tasks the Neutral ones -->
-  <div class='limTodo'>
-    <div id='normal-tasks' v-if="!viewCompleted" >
+  <div class="limTodo">
+    <div id="normal-tasks" v-if="!viewCompleted">
       <div
-          style='margin: 10px; padding: 5px'
-          v-for="(todo, index) in filteredTodos"
-          :key="index"
-          :class="{
+        style="margin: 10px; padding: 5px"
+        v-for="(todo, index) in filteredTodos"
+        :key="index"
+        :class="{
           task_done: todo.completed,
           task_neutral: todo.neutral,
           task_removed: todo.removed,
           'blue-grey lighten-4': true,
-          'buttonOverlay':true
+          buttonOverlay: true
         }"
-      >
-      <p id="todo_item" class="flow-text">
-        {{ todo.todo_item }}
-      </p>
-        <button class="deleted buttonAppear" @click="updateStatus(index, 'deleted', 'normal_mode')">
-          &cross;
-        </button>
-        <button class="completed buttonAppear" @click="updateStatus(index, 'completed', 'normal_mode')">
-          &checkmark;</button
-        >&nbsp;
-      <p id="task_date">
-        {{ todo.task_date }}
-      </p>
-      </div>
-    </div>
-    <!-- Completed Tasks -->
-    <div class='grey lighten-3' id='completed-tasks' v-if='viewCompleted'>
-      <div
-          style='margin: 10px;'
-          v-for="(todo, index) in filteredTodos"
-          :key="index"
-          class='green lighten-3 buttonOverlay'
-
       >
         <p id="todo_item" class="flow-text">
           {{ todo.todo_item }}
-          <button class="deleted buttonAppear" @click="updateStatus(index, 'deleted', 'completed_mode')">
-            <i class='material-icons'>clear</i>
+        </p>
+        <button
+          class="deleted buttonAppear"
+          @click="updateStatus(index, 'deleted', 'normal_mode')"
+        >
+          &cross;
+        </button>
+        <button
+          class="completed buttonAppear"
+          @click="updateStatus(index, 'completed', 'normal_mode')"
+        >
+          &checkmark;</button
+        >&nbsp;
+        <p id="task_date">
+          {{ todo.task_date }}
+        </p>
+      </div>
+    </div>
+    <!-- Completed Tasks -->
+    <div class="grey lighten-3" id="completed-tasks" v-if="viewCompleted">
+      <div
+        style="margin: 10px;"
+        v-for="(todo, index) in filteredTodos"
+        :key="index"
+        class="green lighten-3 buttonOverlay"
+      >
+        <p id="todo_item" class="flow-text">
+          {{ todo.todo_item }}
+          <button
+            class="deleted buttonAppear"
+            @click="updateStatus(index, 'deleted', 'completed_mode')"
+          >
+            <i class="material-icons">clear</i>
           </button>
           &nbsp;
-          <button class="neutral buttonAppear" @click="updateStatus(index, 'undo', 'completed_mode')">
-            <i class='material-icons'>undo</i>
+          <button
+            class="neutral buttonAppear"
+            @click="updateStatus(index, 'undo', 'completed_mode')"
+          >
+            <i class="material-icons">undo</i>
           </button>
         </p>
 
@@ -106,8 +119,7 @@
       </div>
     </div>
   </div>
-
-  </template>
+</template>
 <script>
 import axios from "axios";
 import firebaseApp from "@/components/db";
@@ -116,7 +128,7 @@ import Modal from "@/components/utilities/Modal";
 export default {
   name: "home_todo",
   components: {
-    modal_todo: Modal,
+    modal_todo: Modal
   },
   data() {
     return {
@@ -127,32 +139,28 @@ export default {
       signedIn: false, // We are going to use this to show the user's items or show the login button
       add_todo_mode: false,
       activateModal: true,
-      viewCompleted: false,
-      auth_user: firebaseApp.auth().currentUser.uid
+      viewCompleted: false
     };
   },
   computed: {
     filteredTodos: function() {
-      if(!this.viewCompleted){
-        console.log('I am in normal view')
+      if (!this.viewCompleted) {
         return this.fetched_todos.filter(todo => {
           return todo.todo_item
-              .toLowerCase()
-              .match(this.searchTodo.toLowerCase());
+            .toLowerCase()
+            .match(this.searchTodo.toLowerCase());
         });
-      }else{
-        console.log('I am in completed view')
+      } else {
         return this.completed_fetched_todos.filter(todo => {
           return todo.todo_item
-              .toLowerCase()
-              .match(this.searchTodo.toLowerCase());
+            .toLowerCase()
+            .match(this.searchTodo.toLowerCase());
         });
       }
-
     }
   },
   methods: {
-    initalizeSetup(){
+    initalizeSetup() {
       try {
         let auth_user = firebaseApp.auth().currentUser.uid;
         // If auth_user is not null then the user is signed in.
@@ -165,27 +173,26 @@ export default {
             obj.data[firebase_id].todo_id = firebase_id;
             if (obj.data[firebase_id].neutral) {
               firebase_todos.unshift(obj.data[firebase_id]);
-            }else if(obj.data[firebase_id].completed){
-              completed_firebase_todos.unshift(obj.data[firebase_id])
+            } else if (obj.data[firebase_id].completed) {
+              completed_firebase_todos.unshift(obj.data[firebase_id]);
             }
           }
           this.fetched_todos = firebase_todos;
           this.completed_fetched_todos = completed_firebase_todos;
-          console.log(`Neutral Todos: ${this.fetched_todos}, Completed Todos: ${this.completed_fetched_todos}`)
         });
       } catch (err) {
         // If auth_user does not exist then the user is not signed in
         this.signedIn = false;
       }
-    }
-    ,
+    },
     updateStatus: function(task_id, task_status, mode) {
       let task_at_hand = this.fetched_todos[task_id];
       let task_completed = this.completed_fetched_todos[task_id];
+      let auth_user = firebaseApp.auth().currentUser.uid;
 
       if (task_status === "completed") {
         //* So the idea is that we set the status to true then push this item to the completed task array
-        const USER_FIREBASE_URL = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${this.auth_user}/todo/${task_at_hand.todo_id}.json`;
+        const USER_FIREBASE_URL = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${auth_user}/todo/${task_at_hand.todo_id}.json`;
         task_at_hand.completed = true;
         task_at_hand.neutral = false;
         task_at_hand.removed = false;
@@ -197,7 +204,7 @@ export default {
         this.fetched_todos.splice(task_id, 1);
       } else if (task_status === "undo") {
         //* The undo button is only for the completed view so we use todo_completed list instead
-        const USER_FIREBASE_URL = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${this.auth_user}/todo/${task_completed.todo_id}.json`;
+        const USER_FIREBASE_URL = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${auth_user}/todo/${task_completed.todo_id}.json`;
         task_completed.completed = false;
         task_completed.neutral = true; // resetting the status of the task
         task_completed.removed = false;
@@ -209,12 +216,12 @@ export default {
         // At this point the user just wants to remove the task
         // The idea behind this is that we use mode to see which array we need to edit
         if (mode === "normal_mode") {
-          const USER_FIREBASE_URL = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${this.auth_user}/todo/${task_at_hand.todo_id}.json`;
+          const USER_FIREBASE_URL = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${auth_user}/todo/${task_at_hand.todo_id}.json`;
           this.fetched_todos.splice(task_id, 1);
           axios.delete(USER_FIREBASE_URL);
         } else {
           // We are in completed_mode
-          const USER_FIREBASE_URL = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${this.auth_user}/todo/${task_completed.todo_id}.json`;
+          const USER_FIREBASE_URL = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${auth_user}/todo/${task_completed.todo_id}.json`;
           console.log("I should be here rn");
           this.completed_fetched_todos.splice(task_id, 1);
           axios.delete(USER_FIREBASE_URL);
@@ -224,13 +231,13 @@ export default {
     redirect_to_login() {
       this.$router.push("/login");
     },
-    changeView: function(){
-      this.viewCompleted = !this.viewCompleted
-    },
+    changeView: function() {
+      this.viewCompleted = !this.viewCompleted;
+    }
   },
   created() {
     this.initalizeSetup();
-  },
+  }
 };
 </script>
 <style scoped>
@@ -295,23 +302,22 @@ button {
   padding: 19px;
 }
 
-.limTodo{
+.limTodo {
   overflow: scroll;
   overflow-x: hidden;
   max-height: 950px;
 }
 
-.buttonAppear{
-  display:none
+.buttonAppear {
+  display: none;
 }
 
-.buttonOverlay{
+.buttonOverlay {
   box-shadow: 2px 5px rgba(0, 0, 0, 0.25);
   border-radius: 16px;
-  padding:10px
+  padding: 10px;
 }
-.buttonOverlay:hover .buttonAppear{
-  display:block;
+.buttonOverlay:hover .buttonAppear {
+  display: block;
 }
-
 </style>

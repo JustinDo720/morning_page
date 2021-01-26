@@ -1,8 +1,12 @@
 <template>
-  <p class="flow-text green-text accent-3">
-    {{ quote_of_day }}
+  <div class="quoteBox grey darken-3 z-depth-4">
+    <h4 class="teal-text text-accent-4">
+      {{ quote_of_day }}
+    </h4>
+  </div>
+  <p class="right flow-text teal-text text-accent-4" style="margin:10px">
+    - {{ quote_author }}
   </p>
-  <p class="flow-text green-text accent-3">- {{ quote_author }}</p>
 </template>
 <script>
 import axios from "axios";
@@ -32,3 +36,9 @@ export default {
   }
 };
 </script>
+<style scoped>
+.quoteBox {
+  border-radius: 5%;
+  padding: 8px;
+}
+</style>

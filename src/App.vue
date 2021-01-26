@@ -14,6 +14,18 @@ require("dotenv").config({ path: ".env" });
 export default {
   components: {
     navigation
+  },
+  created() {
+    let date_info = new Date();
+    let curr_hr = date_info.getHours();
+    console.log(curr_hr);
+    if (curr_hr < 12) {
+      document.body.style.backgroundColor = "#e0f7fa";
+    } else if (curr_hr <= 18 && curr_hr >= 12) {
+      document.body.style.backgroundColor = "#fff3e0";
+    } else {
+      document.body.style.backgroundColor = "#fafafa";
+    }
   }
 };
 </script>

@@ -5,7 +5,7 @@
       id="weather_modal"
       class="modal_item white"
       v-if="currentCompName === 'weather'"
-      style='width: 500px;'
+      style="width: 500px;"
     >
       <div class="right">
         <button class="btn-small red black-text" @click="removeModal">
@@ -27,32 +27,36 @@
     </div>
     <!-- Todo_Modal -->
     <div
-      style='
+      style="
         width:90%;
         height:90%;
-      '
+      "
       id="todo-modal"
-      class="modal_item white teal lighten-3"
+      class="modal_item white deep-purple lighten-2"
       v-if="currentCompName == 'todo'"
     >
       <div>
         <div class="right">
-          <button class="btn-small red black-text" @click="removeModal" style='margin: 10px; margin-top: 1px;'>
+          <button
+            class="btn-small red black-text"
+            @click="removeModal"
+            style="margin: 10px; margin-top: 1px;"
+          >
             <i class="material-icons">
               clear
             </i>
           </button>
         </div>
-        <add_todo @finish='closeRefresh($event)'></add_todo>
+        <add_todo @finish="closeRefresh($event)"></add_todo>
       </div>
     </div>
   </div>
 </template>
 <script>
-import add_todo from "@/components/home_child_component/add_todo"
+import add_todo from "@/components/home_child_component/add_todo";
 export default {
   name: "Modal",
-  components:{
+  components: {
     add_todo
   },
   props: {
@@ -70,7 +74,7 @@ export default {
   data() {
     return {
       visibileModal: this.activeModal,
-      currentCompName: this.compName,
+      currentCompName: this.compName
     };
   },
   methods: {
@@ -78,11 +82,11 @@ export default {
       this.visibileModal = false;
       document.body.style.overflow = "";
     },
-    closeRefresh: function(close){
-      if(close){
+    closeRefresh: function(close) {
+      if (close) {
         // If we are finished we need to tell the Modal to close but also tell the home page to run the init again
         this.removeModal();
-        this.$emit('refresh-todo', true)
+        this.$emit("refresh-todo", true);
       }
     }
   },
