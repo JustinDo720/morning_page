@@ -17,7 +17,7 @@
       </div>
     </div>
 
-    <div class="news card light-blue darken-3">
+    <div class="news card light-blue darken-2">
       <div class="card-content">
         <home_news></home_news>
       </div>

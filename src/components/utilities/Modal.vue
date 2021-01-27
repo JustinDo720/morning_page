@@ -3,7 +3,7 @@
     <!-- Weather -->
     <div
       id="weather_modal"
-      class="modal_item white"
+      class="modal_item white cyan darken-3"
       v-if="currentCompName === 'weather'"
       style="width: 500px;"
     >
@@ -14,12 +14,11 @@
           </i>
         </button>
       </div>
-      <div class="justify-center">
+      <div class="justify-center cyan-text text-darken-1">
         <h4>
-          Weather
+          Add Your City
         </h4>
       </div>
-      <hr style="margin-top: 20px;" />
       <!-- Slots -->
       <div>
         <slot name="weather"></slot>
