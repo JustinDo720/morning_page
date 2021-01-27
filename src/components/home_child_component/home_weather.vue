@@ -124,7 +124,7 @@ export default {
           }
         });
         // If we have a GET request from the user then the default city will not take place
-        if (this.city_from_fb) {
+        if (this.city_from_fb['city_name'] !== '') {
           // By setting info's city name we could change the api request
           this.info.city_name = this.city_from_fb["city_name"];
         }
@@ -154,13 +154,10 @@ export default {
       let user_fb = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${auth_user}/weather.json`;
       // If this var was updated by our GET request then we will put instead of post so we could keep only ONE city key
       if (this.city_from_fb["city_name"] === "") {
-        await axios.post(user_fb, { city: this.city }).then(obj => {
-          console.log("I posted");
-        });
+        await axios.post(user_fb, { city: this.city })
       } else {
         let user_fb = `https://testing-todo-7bc25-default-rtdb.firebaseio.com/users/${auth_user}/weather/${this.city_from_fb["city_id"]}.json`;
         await axios.put(user_fb, { city: this.city }).then(obj => {
-          console.log("I Updated");
           this.city_from_fb["city_name"] = obj.data.city;
           // As soon as the user enters we have an instant change
           this.info["city_name"] = this.city_from_fb["city_name"];
@@ -196,4 +193,6 @@ export default {
   font-style: italic;
   text-shadow: 3px 6px rgba(0, 0, 0, 0.25);
 }
+
+
 </style>

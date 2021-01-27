@@ -1,18 +1,14 @@
 import { createWebHistory, createRouter } from "vue-router";
 import home_page from "@/components/Home";
-import todo from "@/components/home_child_component/add_todo";
 import login from "@/components/login.vue";
 import register from "@/components/register.vue";
 import firebaseApp from "@/components/db";
-import Modal from "@/components/utilities/Modal";
 
 let history = createWebHistory();
 let routes = [
   { path: "/", component: home_page },
-  { path: "/todo", component: todo, meta: { requiresAuth: true } }, // requiresAuth acts like a guard
   { path: "/login", component: login, meta: { requiresGuest: true } },
   { path: "/register", component: register, meta: { requiresGuest: true } },
-  { path: "/test_modal", component: Modal }
 ];
 
 const router = createRouter({

@@ -4,11 +4,10 @@
       <div class="container">
         <router-link to="/" class="brand-logo left">Home Page</router-link>
         <ul class="right">
-          <span v-if="currentUser" class="email black-text left">
-            Welcome, {{ currentUser }}
-          </span>
           <li>
-            <router-link to="/todo">Todo-Testing Page</router-link>
+            <span v-if="currentUser" class="email black-text left">
+              Welcome, {{ currentUser }}&nbsp;
+            </span>
           </li>
           <li v-if="!isLoggedIn">
             <router-link to="/login">Login</router-link>
