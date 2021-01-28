@@ -4,7 +4,11 @@
       {{ quote_of_day }}
     </h4>
   </div>
-  <p class="right flow-text teal-text text-accent-4" style="margin:10px" v-if='quote_author'>
+  <p
+    class="right flow-text teal-text text-accent-4"
+    style="margin:10px"
+    v-if="quote_author"
+  >
     - {{ quote_author }}
   </p>
   <p class="right flow-text teal-text text-accent-4" style="margin:10px" v-else>

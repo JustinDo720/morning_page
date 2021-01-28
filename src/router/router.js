@@ -8,7 +8,7 @@ let history = createWebHistory();
 let routes = [
   { path: "/", component: home_page },
   { path: "/login", component: login, meta: { requiresGuest: true } },
-  { path: "/register", component: register, meta: { requiresGuest: true } },
+  { path: "/register", component: register, meta: { requiresGuest: true } }
 ];
 
 const router = createRouter({

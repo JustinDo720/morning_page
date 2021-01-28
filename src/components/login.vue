@@ -33,7 +33,8 @@
             </form>
             <div>
               <h6>
-                Need an account? Register <a href='/register' class='teal-text text-darken-2'>Here</a>
+                Need an account? Register
+                <a href="/register" class="teal-text text-darken-2">Here</a>
               </h6>
             </div>
           </div>
