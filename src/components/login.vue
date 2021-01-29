@@ -34,7 +34,9 @@
             <div>
               <h6>
                 Need an account? Register
-                <a href="/register" class="teal-text text-darken-2">Here</a>
+                <router-link to="/register" class="teal-text text-darken-2"
+                  >Here</router-link
+                >
               </h6>
             </div>
           </div>
